@@ -1,0 +1,29 @@
+## Interface: 120100, 120007, 120005, 120001
+## Title: Kriegsmeute|cff33ff99Post|r
+## Title-deDE: Kriegsmeute|cff33ff99Post|r
+## Notes: Routes warbound items to recipients by rule, mails them and transfers gold.
+## Notes-deDE: Verteilt kriegsmeutengebundene Gegenstaende regelbasiert per Post und ueberweist Gold.
+## Author: Thomas Weirich
+## Version: 12.1.0.1
+## X-License: MIT
+## X-Website: https://github.com/sorglos-it
+## IconTexture: Interface\Icons\INV_Letter_15
+## SavedVariables: Warbrand-Fast-MailDB
+## SavedVariablesPerCharacter: Warbrand-Fast-MailCharDB
+## AddonCompartmentFunc: Warbrand-Fast-Mail_OnCompartmentClick
+## DefaultState: Enabled
+
+Locale.lua
+lang\enUS.xml
+lang\[TextLocale].xml
+Lib\Util.lua
+Lib\Widgets.lua
+Lib\Categories.lua
+Lib\Hold.lua
+Lib\Scanner.lua
+Lib\Rules.lua
+Lib\Mailer.lua
+Lib\Gold.lua
+Core.lua
+UI.lua
+Config.lua
