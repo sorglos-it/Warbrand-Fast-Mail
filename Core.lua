@@ -46,7 +46,7 @@ local DEFAULTS = {
     includeUnbound = false,  -- implicit default rule also takes BoE
     confirm        = true,
     debug          = false,
-    subject        = "Kriegsmeute",
+    subject        = "Warband",
     body           = "",
     gold           = {
         recipient = "",                       -- fixed character, account-wide
@@ -78,7 +78,7 @@ end
 
 -- --- Confirmation popup ------------------------------------
 
-StaticPopupDialogs["Warbrand-Fast-Mail_CONFIRM"] = {
+StaticPopupDialogs["WARBRANDFASTMAIL_CONFIRM"] = {
     text           = "%s",
     button1        = SEND or "Send",
     button2        = CANCEL or "Cancel",
@@ -93,7 +93,7 @@ StaticPopupDialogs["Warbrand-Fast-Mail_CONFIRM"] = {
 
 local function Launch(plan, override, total, lines, withGold)
     if ns.db.confirm then
-        local dlg = StaticPopup_Show("Warbrand-Fast-Mail_CONFIRM",
+        local dlg = StaticPopup_Show("WARBRANDFASTMAIL_CONFIRM",
             string.format(L.CONFIRM, total, lines))
         if dlg then dlg.data = { plan = plan, override = override, withGold = withGold } end
         return
@@ -406,16 +406,16 @@ local function Help()
     end
 end
 
-SLASH_Warbrand-Fast-Mail1 = "/wfm"
-SLASH_Warbrand-Fast-Mail2 = "/kriegsmeute"
-SlashCmdList["Warbrand-Fast-Mail"] = function(msg)
+SLASH_WARBRANDFASTMAIL1 = "/wfm"
+SLASH_WARBRANDFASTMAIL2 = "/warbrand"
+SlashCmdList["WARBRANDFASTMAIL"] = function(msg)
     msg = Util.Trim(tostring(msg or ""))
     local cmd, rest = msg:match("^(%S*)%s*(.*)$")
     local fn = handlers[(cmd or ""):lower()]
     if fn then fn(rest or "") else Help() end
 end
 
-function Warbrand-Fast-Mail_OnCompartmentClick()
+function WarbrandFastMail_OnCompartmentClick()
     if ns.Config then ns.Config:ToggleRules() end
 end
 
@@ -427,17 +427,17 @@ init:SetScript("OnEvent", function(self, _, name)
     if name ~= ADDON then return end
     self:UnregisterEvent("ADDON_LOADED")
 
-    Warbrand-Fast-MailDB     = ApplyDefaults(Warbrand-Fast-MailDB or {}, DEFAULTS)
-    Warbrand-Fast-MailCharDB = ApplyDefaults(Warbrand-Fast-MailCharDB or {}, CHAR_DEFAULTS)
-    ns.db     = Warbrand-Fast-MailDB
-    ns.charDB = Warbrand-Fast-MailCharDB
+    WarbrandFastMailDB     = ApplyDefaults(WarbrandFastMailDB or {}, DEFAULTS)
+    WarbrandFastMailCharDB = ApplyDefaults(WarbrandFastMailCharDB or {}, CHAR_DEFAULTS)
+    ns.db     = WarbrandFastMailDB
+    ns.charDB = WarbrandFastMailCharDB
 
     -- migrate older profiles: separate ignore/keep tables become one
     -- hold list, and the temporary locale registrar is retired.
     if ns.db.minQuality ~= nil then ns.db.minQuality = nil end
     ns.Hold.Migrate(ns.db)
     ns.Hold.Migrate(ns.charDB)
-    _G.Warbrand-Fast-Mail_RegisterLocale = nil
+    _G.WarbrandFastMail_RegisterLocale = nil
     if type(ns.db.target) ~= "string" then ns.db.target = "" end
     if type(ns.charDB.target) ~= "string" then ns.charDB.target = "" end
     if type(ns.charDB.goldRecipient) ~= "string" then ns.charDB.goldRecipient = "" end

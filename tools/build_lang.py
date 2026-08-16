@@ -6,11 +6,11 @@ detectable: the generator refuses to write a file that is missing keys.
 """
 import json, pathlib, html
 
-ROOT = pathlib.Path('/home/claude/Warbrand-Fast-Mail')
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 LANG = ROOT / 'lang'
 
-en = json.loads(pathlib.Path('/home/claude/en_base.json').read_text(encoding='utf-8'))
-de = json.loads(pathlib.Path('/home/claude/de_base.json').read_text(encoding='utf-8'))
+en = json.loads((ROOT / 'tools' / 'en_base.json').read_text(encoding='utf-8'))
+de = json.loads((ROOT / 'tools' / 'de_base.json').read_text(encoding='utf-8'))
 
 # strip the surrounding quotes that came out of the Lua source
 unq = lambda d: {k: v[1:-1] for k, v in d.items()}
@@ -423,7 +423,7 @@ for code, tbl in LANGS.items():
            f'         Generated - do not edit by hand, edit tools/build_lang.py.\n'
            f'         Keys missing here fall back to lang\\enUS.xml. -->\n'
            '    <Script><![CDATA[\n'
-           f'        Warbrand-Fast-Mail_RegisterLocale("{code}", {{\n'
+           f'        WarbrandFastMail_RegisterLocale("{code}", {{\n'
            f'{body}\n'
            '        })\n'
            '    ]]></Script>\n'

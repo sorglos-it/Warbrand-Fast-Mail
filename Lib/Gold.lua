@@ -71,7 +71,7 @@ function Gold.IsPending() return pending ~= nil end
 
 -- --- Confirmation ------------------------------------------
 
-StaticPopupDialogs["Warbrand-Fast-Mail_GOLD"] = {
+StaticPopupDialogs["WARBRANDFASTMAIL_GOLD"] = {
     text           = "%s",
     button1        = SEND or "Send",
     button2        = CANCEL or "Cancel",
@@ -100,7 +100,7 @@ function Gold.Send()
     if amount <= 0 then return Util.Print(L.GOLD_NOTHING) end
 
     if ns.db.gold.confirm then
-        local dlg = StaticPopup_Show("Warbrand-Fast-Mail_GOLD",
+        local dlg = StaticPopup_Show("WARBRANDFASTMAIL_GOLD",
             string.format(L.GOLD_CONFIRM, Util.Money(amount), recipient, Util.Money(Gold.Reserve())))
         if dlg then dlg.data = { recipient = recipient } end
         return
@@ -128,7 +128,7 @@ function Gold.Execute(recipient)
     Util.Try(SetSendMailMoney, amount)
 
     local subject = ns.db.subject
-    if type(subject) ~= "string" or subject == "" then subject = "Kriegsmeute" end
+    if type(subject) ~= "string" or subject == "" then subject = "Warband" end
 
     if SendMailNameEditBox    then SendMailNameEditBox:SetText(verified) end
     if SendMailSubjectEditBox then SendMailSubjectEditBox:SetText(subject) end

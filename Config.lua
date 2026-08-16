@@ -610,7 +610,7 @@ local function BuildSettingsWindow()
         ns.db.includeUnbound = s.unbound:GetChecked() and true or false
 
         local subject = Util.Trim(s.subject:GetText())
-        ns.db.subject = (subject ~= "" and subject) or "Kriegsmeute"
+        ns.db.subject = (subject ~= "" and subject) or "Warband"
 
         Util.Print(L.SET_SAVED)
         Config:RefreshSettings()

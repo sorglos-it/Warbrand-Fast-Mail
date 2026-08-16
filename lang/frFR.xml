@@ -6,7 +6,7 @@
          Generated - do not edit by hand, edit tools/build_lang.py.
          Keys missing here fall back to lang\enUS.xml. -->
     <Script><![CDATA[
-        Warbrand-Fast-Mail_RegisterLocale("frFR", {
+        WarbrandFastMail_RegisterLocale("frFR", {
             ABORTED          = "Annule. %d objet(s) deja envoyes.",
             BAD_NAME         = "Nom de destinataire invalide : %s",
             BIND_ANY         = "Peu importe",

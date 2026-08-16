@@ -28,7 +28,7 @@ ns.localeLoaded = nil
 ---exactly the enUS-then-locale order the TOC produces.
 ---@param code string  locale code, for diagnostics
 ---@param tbl table    [KEY] = "text"
-function _G.Warbrand-Fast-Mail_RegisterLocale(code, tbl)
+function _G.WarbrandFastMail_RegisterLocale(code, tbl)
     if type(tbl) ~= "table" then return end
     local n = 0
     for key, value in pairs(tbl) do

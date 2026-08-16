@@ -1,445 +1,269 @@
 # Warbrand-Fast-Mail
 
-WoW-Addon (Retail). Verteilt kriegsmeutengebundene und ungebundene Gegenstände
-regelbasiert per Post an mehrere Empfänger — in 12er-Paketen, vollautomatisch.
+[![World of Warcraft](https://img.shields.io/badge/World%20of%20Warcraft-Retail-00AEFF?logo=battledotnet&logoColor=white)](#requirements)
+[![Interface](https://img.shields.io/badge/interface-120100-0b7285.svg)](#versioning)
+[![Type](https://img.shields.io/badge/type-add--on-8e44ad.svg)](#installation)
+[![Languages](https://img.shields.io/badge/UI-DE%20%7C%20EN%20%7C%20ES%20%7C%20FR%20%7C%20IT-4c1.svg)](#languages)
+[![Lua](https://img.shields.io/badge/Lua-5.1-2C2D72?logo=lua&logoColor=white)](#architecture)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-00457C.svg?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=6CDEVZGJWTNQQ)
+
+A World of Warcraft add-on that **empties your bags into the mailbox by rule**. Open a mailbox, and a panel appears next to it showing exactly where every item is going — "7 × Bankchar", "3 × Muli", "5 without recipient", "2 held". Press one button and it sends them, in batches of 12, to as many different recipients as your rules name.
+
+It moves **warbound** and **unbound (BoE)** items. Soulbound gear is never touched, and the add-on determines that from the API rather than from tooltip text, so it does not depend on your client language.
+
+Gold works the same way: everything **above a reserve you set** goes to a fixed character, with the amount recalculated immediately before the transfer rather than taken from the confirmation dialog.
+
+## Features
+
+- **Rule engine** — a top-down list, first matching rule wins; anything unmatched goes to the character's default recipient
+- **Multiple recipients per run** — the plan is computed once and mailed in 12-item batches, up to a hard cap of 25 mails
+- **Two scopes everywhere** — rules, hold list and both default recipients exist account-wide and per character, the character value beating the account one
+- **Hold list with quantities** — an empty amount means *never send*, `20` means *keep 20 and send the rest*, including partial-stack splitting
+- **Self-lock** — when the winning rule points at the character you are on, the item stays put and evaluation stops, so a collector character needs no counter-rule
+- **Gold transfer with reserve** — sends everything above the reserve, postage deducted on top so the reserve stays exact
+- **Categories from the auction house** — the category dropdown is derived from Blizzard's own browse tree, localized and always current, instead of the dead entries in `Enum.ItemClass`
+- **Five languages** — German, English, Spanish (ES/MX), French, Italian, picked from the client locale
+- **No network access** — no `loadstring`, no addon comms, nothing leaves your client
+
+## Requirements
+
+- World of Warcraft **Retail** (Interface `120100` / patch 12.1.0; older interface versions `120007`, `120005`, `120001` are declared as compatible)
+- Nothing else — no library dependencies, no external add-ons
 
 ## Installation
 
-```
-World of Warcraft\_retail_\Interface\AddOns\Warbrand-Fast-Mail\
-```
+1. Download the latest release and unpack it.
+2. Copy the `Warbrand-Fast-Mail` folder into the AddOns directory:
 
-`/reload` oder Client neu starten.
-Interface-Version prüfen: `/wfm version` im Spiel (oder
-`/dump select(4, GetBuildInfo())`). Weicht sie ab, die erste Zahl in
-`## Interface:` **und** die ersten drei Stellen von `## Version:` nachziehen.
+   | OS | Path |
+   |---|---|
+   | Windows | `C:\Program Files (x86)\World of Warcraft\_retail_\Interface\AddOns\` |
+   | macOS | `/Applications/World of Warcraft/_retail_/Interface/AddOns/` |
 
-## Was ist neu in 12.1.0.1
+   The result must look like this — the folder name and the `.toc` name have to match, or the client will not list the add-on:
 
-### Bugfix: Button „Behalten" ohne Funktion
+   ```
+   World of Warcraft\_retail_\Interface\AddOns\Warbrand-Fast-Mail\Warbrand-Fast-Mail.toc
+   ```
 
-Beim Umbau des Einstellungsfensters wurden `BuildKeepWindow` und
-`Config:ToggleKeep` mit ausgeschnitten — der Button rief eine `nil`-Methode.
-Er entfällt jetzt komplett, die Behaltemengen sind in die Ignorierliste
-gewandert.
+3. Restart the client, or type `/reload` if it is already running.
+4. Check that it loaded: `/wfm version` prints the add-on version, the WoW version it was built for, and your client's interface number.
 
-### Eine Liste statt zwei: Behalteliste
+If the interface number differs from the one shown above, update the first entry in `## Interface:` and the first three digits of `## Version:` in the `.toc`. See [Versioning](#versioning) for what a mismatch means.
 
-Ignorieren und Behalten waren dasselbe Problem in zwei Listen. Jetzt eine,
-mit Mengenspalte:
+### Enabling it
 
-| Eintrag | Bedeutung |
+The add-on is `## DefaultState: Enabled`, so it is active after the restart. It also registers an entry in the **AddOn Compartment** (the icon next to the minimap) that opens the rules window.
+
+## Usage
+
+Open any mailbox. The panel appears to the right of the mail frame and shows the distribution plan before anything is sent.
+
+1. Set a default recipient: `/wfm target <name>` (this character) or `/wfm target global <name>` (all characters).
+2. Optionally add rules for anything that should go elsewhere — `/wfm rules`.
+3. Press **Send** on the panel, or type `/wfm send`.
+
+A confirmation dialog with the full plan appears first; it can be switched off with `/wfm confirm`.
+
+## Slash commands
+
+Both `/wfm` and `/warbrand` work.
+
+| Command | Effect |
 |---|---|
-| Menge **leer** | nie verschicken (das alte „Ignorieren") |
-| Menge **20** | 20 bleiben liegen, der Rest geht raus |
+| `/wfm send` | Run all rules |
+| `/wfm force <name>` | Ignore rules, send everything to one recipient |
+| `/wfm target <name>` | Default recipient, this character |
+| `/wfm target global <name>` | Default recipient, all characters |
+| `/wfm gold` | Send gold minus the reserve |
+| `/wfm goldtarget <name>` | Gold recipient, this character |
+| `/wfm goldtarget global <name>` | Gold recipient, all characters |
+| `/wfm reserve <gold>` | Set the reserve (default 100) |
+| `/wfm settings` | Settings window |
+| `/wfm rules` | Rules window |
+| `/wfm hold` | Hold list (also `/wfm ignore`, `/wfm keep`) |
+| `/wfm hold <itemID>` | Show the current entry |
+| `/wfm hold <itemID> 20` | Keep 20, send the rest |
+| `/wfm hold <itemID> -` | Delete the entry |
+| `/wfm hold char <itemID> 20` | Same, for this character only |
+| `/wfm list` | Print the distribution plan to chat |
+| `/wfm unbound` | Toggle whether the default rule also takes BoE |
+| `/wfm confirm` | Toggle the confirmation dialog |
+| `/wfm ui` | Toggle the panel |
+| `/wfm debug` | Toggle debug output |
+| `/wfm version` | Version, target WoW version, client interface |
 
-`0` wird als „leer" gelesen — „behalte 0" wäre nur ein Eintrag, der nichts tut.
-Neue Einträge starten auf **leer**, weil das die sichere Lesart ist, wenn man
-ein Item auf eine Behalteliste zieht.
+## Rules
 
-Alte Profile werden automatisch zusammengeführt: `ignore` → `true`,
-`keep` → Zahl. Die alten Tabellen werden dabei entfernt.
+Rules are evaluated top to bottom and **the first match wins**. Whatever matches nothing goes to the character's default recipient.
 
-### Suche in Behalteliste und Regeln
+| Field | Effect |
+|---|---|
+| Recipient | Required, `Name` or `Name-Realm` |
+| Category / subcategory | e.g. Armor / Plate — names come localized from the client |
+| Binding | Any / Warbound / Unbound (BoE) |
+| Minimum quality | Poor … Heirloom |
+| Only these items | Item list; **when filled, the filters above no longer apply** |
+| Scope | All characters, or this character only |
 
-Beide Fenster haben ein Suchfeld. Die Behalteliste filtert nach Itemname und
-Item-ID, die Regelliste zusätzlich nach Name, Empfänger, Kategorie, Besitzer
-und den Items in der Regel.
+*"Always send item X to Y":* new rule → recipient `Y` → drag the item into "Only these items" → Apply.
 
-Itemnamen sind nicht immer im Client-Cache. Fehlt einer, fordert das Addon ihn
-per `C_Item.RequestLoadItemDataByID` an und aktualisiert die offene Liste bei
-`GET_ITEM_INFO_RECEIVED` — die Suche nach Namen funktioniert also auch für
-Items, die beim Öffnen noch nicht geladen waren.
+*"All armor, warbound or unbound, to Z":* new rule → recipient `Z` → category `Armor` → binding `Any` → Apply. ("Any" covers exactly warbound + unbound; soulbound is never included.)
 
-### Kategorien aus dem Auktionshaus
+Rules can be disabled individually and reordered with `^` / `v` — order decides when they overlap. A character-scoped rule remembers its owner; on other characters it is inactive and shown greyed out with the owner's name.
 
-`Enum.ItemClass` schleppt tote Einträge mit (Projektile, Köcher, zwei
-`*Obsolete`-Klassen) und `GetItemClassInfo` liefert dafür brav lokalisierte
-Namen — die landeten bisher im Dropdown, obwohl kein aktuelles Item sie je
-trifft.
+### Self-lock
 
-Blizzard pflegt mit `AuctionCategories` bereits den Browse-Baum von allem,
-was tatsächlich handelbar ist. Das Addon lädt `Blizzard_AuctionHouseUI` bei
-Bedarf nach und leitet Kategorien und Unterkategorien daraus ab — lokalisiert
-und immer auf Patch-Stand.
+When the **winning** rule points at the character currently logged in, the item stays put and evaluation stops. A single account-wide rule is therefore enough:
 
-Eine Kategorie wird nur übernommen, wenn **alle** ihre Filter dieselbe
-Klasse nennen; gemischte werden verworfen statt geraten.
+| Logged in as | Pet charm | Source |
+|---|---|---|
+| Warrior | → Collector | rule |
+| Miner | → Collector | rule |
+| **Collector** | **stays put** | self-lock |
 
-Fällt das Nachladen aus, greift eine explizite Liste lebender Item-Klassen
-(oben in `Lib/Categories.lua`, eine Zeile zum Nachpflegen).
+The stop matters: falling through to the next rule could let a broader rule mail the items straight back out again.
 
-### Gegenregel: war schon drin, jetzt sichtbar
+## Hold list
 
-Die automatische Selbst-Sperre gibt es seit 12.1.0.0: zeigt die **gewinnende**
-Regel auf den laufenden Charakter, bleibt der Gegenstand liegen und die
-Auswertung stoppt. Für `[Ehrenabzeichen] → Sammelchar` als globale Regel
-braucht es also keine Gegenregel — auf dem Sammelchar feuert sie nicht, es
-entsteht kein Porto.
+One list with an amount column, covering both "never send" and "keep some":
 
-Neu ist nur, dass man es **sieht**: solche Regeln stehen in der Liste mit
-`(hier inaktiv)` und erklären sich im Tooltip. Vorher sah das aus wie ein
-Defekt.
+| Entry | Meaning |
+|---|---|
+| Amount **empty** | never send |
+| Amount **20** | 20 stay, the rest goes out |
 
-### Mehrsprachig über den Client
+`0` reads as empty. New entries start empty, because that is the safe reading when you drag an item onto a hold list.
 
-`DE`, `EN`, `FR`, `ES` (ES/MX), `IT`. Die Strings liegen als XML in `lang\`:
+The amount is a **lower bound on the bag count**, not a running counter:
+
+```
+available(itemID) = GetItemCount(itemID) - held(itemID)
+```
+
+Attached items have already left the bags, so the value shrinks on its own and lands exactly on the held amount. Nothing has to be tracked across steps, and an interrupted or resumed run cannot overshoot.
+
+**Partial stacks:** if a whole stack does not fit the budget, `C_Container.SplitContainerItem` splits off exactly the allowed amount. `ClearCursor()` always follows, so a failed drop returns the pieces to the bag instead of leaving them on the cursor.
+
+250 potions in stacks of 100/100/50, keep 20:
+
+| Step | Stack | Budget | Action | Bags after |
+|---|---|---|---|---|
+| 1 | 100 | 230 | whole stack | 150 |
+| 2 | 100 | 130 | whole stack | 50 |
+| 3 | 50 | 30 | **split 30** | 20 |
+| 4 | — | 0 | done | 20 |
+
+## Gold
+
+```
+sendable = GetMoney() - reserve - postage
+```
+
+Postage (30 copper) is deducted on top of the reserve, so the reserve is left exactly intact. If the result is ≤ 0 the button stays disabled. Default reserve: **100 gold**.
+
+## Detection logic
+
+Three stages, first unambiguous answer wins. The result is always exactly one of `warbound` / `unbound` / `soulbound`:
+
+1. `C_Bank.IsItemAllowedInBankType(Enum.BankType.Account, loc)` combined with `C_Item.IsBound(loc)` — language-independent and authoritative. Soulbound items are never allowed in the warband bank, warbound ones always are.
+2. `bindType` (field 14 from `GetItemInfo`) against `Enum.ItemBind` `ToWoWAccount` / `ToBnetAccount` / `*UntilEquipped` (numerically 7/8/9).
+3. Tooltip scan via `C_TooltipInfo.GetBagItem` against Blizzard's own localized GlobalStrings. No hardcoded text fragments.
+
+Equipped "warbound until equipped" pieces are soulbound and already drop out at stage 1.
+
+## Safety
+
+- Recipient names go through a strict whitelist that blocks `|` escapes, control characters, quotes and backslashes — before every `SendMail`, including rules loaded from SavedVariables
+- Sending to yourself is refused
+- Confirmation dialog with the full distribution plan (can be disabled)
+- Hard cap of 25 mails per run
+- Postage checked against `GetMoney()` before every `SendMail`
+- `SetSendMailCOD(0)` and `SetSendMailMoney(0)` enforced on item runs — never gold, never COD
+- Aborts on `MAIL_FAILED` and as soon as the mailbox closes
+- Bags are rescanned and rerouted before **every single** attachment, so stale slot indices are structurally impossible
+- Three failed attempts per item, then skip — no endless loop
+- On partial stacks the cursor is checked against the **itemID**, not the link string, and cleared unconditionally afterwards
+- Gold specifically: the amount is recalculated immediately before `SendMail` and never taken from the dialog; the recipient is re-validated against the whitelist on click; the transfer aborts if items are attached or an item run is in progress, and vice versa
+- No network access, no `loadstring`, no addon communication
+
+## Versioning
+
+```
+12 . 1 . 0 . 6
+└──┬──┘   │   └── addon build counter
+   │      └────── WoW patch
+   └───────────── WoW version this copy was built for
+```
+
+The first three digits are the WoW version this copy was written against — here **12.1.0** (Midnight, "Curse of Ula'tek", interface `120100`). Only the fourth digit counts up for add-on changes.
+
+The value is not decoration: on load the add-on compares it against `select(4, GetBuildInfo())`.
+
+| Difference | Behavior |
+|---|---|
+| none | silent |
+| patch only (e.g. client 12.1.7) | silent on login, yellow note on `/wfm version` |
+| major or minor (e.g. 12.2.0) | red warning on login |
+
+A pure patch bump is not an error, just a hint to update the `## Interface:` line. A branch change means: check the API.
+
+## Languages
+
+`DE`, `EN`, `FR`, `ES` (ES/MX), `IT`. The strings live as XML in `lang\`:
 
 ```
 lang\enUS.xml   lang\deDE.xml   lang\frFR.xml
 lang\esES.xml   lang\esMX.xml   lang\itIT.xml
 ```
 
-Der TOC nutzt die Pfadvariable `[TextLocale]`:
+The TOC uses the `[TextLocale]` path variable:
 
 ```
 lang\enUS.xml
 lang\[TextLocale].xml
 ```
 
-Der Client setzt dafür seinen eigenen Locale-Code ein und lädt genau eine
-Übersetzung neben der englischen Basis. Fehlt eine Sprache, bleibt es bei
-Englisch — kein Fehler, keine Sonderbehandlung. Fehlt ein einzelner
-Schlüssel, liefert die Metatabelle den Schlüsselnamen statt `nil`.
+The client substitutes its own locale code and loads exactly one translation next to the English base. A missing language falls back to English — no error, no special case. A missing single key resolves to the key name instead of `nil`.
 
-Die XML-Dateien sind echte `<Ui>`-Dokumente mit einem `<Script>`-Block; die
-`<Script>`-Blöcke rufen einen temporären globalen Registrar, den `Core.lua`
-nach dem Laden wieder auf `nil` setzt.
+The XML files are real `<Ui>` documents with a `<Script>` block calling a temporary global registrar that `Core.lua` sets back to `nil` once loading is done.
 
-**Nicht von Hand editieren.** `tools/build_lang.py` erzeugt alle sechs Dateien
-aus einer Quelle und bricht ab, wenn eine Sprache Schlüssel fehlen, unbekannte
-Schlüssel hat oder die Format-Platzhalter (`%d`, `%s`) von der englischen Basis
-abweichen.
+**Do not edit them by hand.** `tools/build_lang.py` generates all six from one source and refuses to write a file that is missing keys, has unknown keys, or whose format placeholders (`%d`, `%s`) differ from the English base.
 
-### Version bleibt stehen
-
-Während der Entwicklung bleibt `12.1.0.1` fest. Die vierte Stelle wandert
-erst bei einer Veröffentlichung.
-
-## Versionsschema
-
-```
-12 . 1 . 0 . 5
-└──┬──┘   │   └── Build-Zähler des Addons
-   │      └────── WoW-Patch
-   └───────────── WoW-Version, für die gebaut wurde
-```
-
-Die ersten drei Stellen sind die WoW-Version, gegen die diese Kopie geschrieben
-wurde — hier **12.1.0** (Midnight, „Curse of Ula'tek", Interface `120100`). Nur
-die vierte Stelle zählt bei Addon-Änderungen hoch.
-
-Der Wert ist keine Deko: Beim Laden vergleicht das Addon ihn gegen
-`select(4, GetBuildInfo())`.
-
-| Abweichung | Verhalten |
-|---|---|
-| keine | still |
-| nur Patch (z. B. Client 12.1.7) | still beim Login, gelber Hinweis bei `/wfm version` |
-| Major oder Minor (z. B. 12.2.0) | rote Warnung beim Login |
-
-Ein reiner Patch-Sprung ist kein Fehler, sondern nur ein Wink, die
-`## Interface:`-Zeile nachzuziehen. Ein Zweigwechsel dagegen heißt: API prüfen.
-
-`/wfm version` zeigt Version, Ziel-WoW-Version, Client-Version und die rohe
-Interface-Nummer.
-
-## Was war neu in 1.5.0 (jetzt 12.1.0.5)
-
-### Beide Standard-Empfänger, beide Ebenen
-
-Bisher lag der Gegenstands-Empfänger nur am Panel und der Gold-Empfänger nur
-account-weit in den Einstellungen. Jetzt haben **beide** dieselbe zweistufige
-Auflösung wie Regeln und Ignorierliste:
-
-| Ebene | Speicher | |
-|---|---|---|
-| Nur dieser Charakter | `Warbrand-Fast-MailCharDB` | **schlägt** die untere Ebene |
-| Alle Charaktere | `Warbrand-Fast-MailDB` | greift, wenn oben leer |
-
-Das Einstellungsfenster ist entsprechend in zwei beschriftete Blöcke geteilt.
-Leeres Feld = Ebene darunter benutzen. Unten steht immer, was gerade **wirksam**
-ist.
-
-Damit reicht für Twinks eine einmalige account-weite Einstellung, und einzelne
-Charaktere weichen davon ab, wo nötig:
-
-| Charakter | Char-Wert | Gegenstände | Gold |
-|---|---|---|---|
-| Krieger | — | Bankchar *(global)* | Goldchar *(global)* |
-| Twink | `Twinkbank` | Twinkbank *(char)* | Goldchar *(global)* |
-| **Bankchar** | — | **bleibt liegen** | Goldchar *(global)* |
-| **Goldchar** | — | Bankchar *(global)* | **inaktiv** |
-
-Auf dem Zielcharakter selbst wird der eigene Name automatisch inert — die
-account-weite Einstellung kann also überall stehen bleiben.
-
-Zeigt der Charakter-Wert auf ihn selbst, wird das beim Speichern abgelehnt
-(sinnlos). Account-weit ist es erlaubt, weil es dort genau auf einem Charakter
-inert sein *soll*.
-
-`Übernehmen` validiert erst alle vier Empfängerfelder und schreibt danach — ein
-Tippfehler in einem Feld kann den Rest nicht halb angewendet zurücklassen.
-
-Schnellbefehle: `/wfm target <name>` (dieser Char), `/wfm target global <name>`,
-dito `/wfm goldtarget`. Ohne Argument zeigen beide alle drei Werte.
-
-## Was war neu in 1.4.0 (jetzt 12.1.0.4)
-
-### Bugfix: zweites Fenster öffnete hinter dem ersten
-
-Regeln, Ignorieren, Behalten und Einstellungen waren voneinander unabhängige
-Frames in derselben Strata (`HIGH`, wie `MailFrame`). `SetToplevel(true)` hebt
-ein Fenster nur beim **Klick** an, nicht beim Anzeigen — das zweite Fenster
-erschien also darunter, und das erste blieb offen.
-
-Neu: alle vier gehören zu einer exklusiven Gruppe. Beim Öffnen werden die
-anderen geschlossen, das neue kommt in Strata `DIALOG` und bekommt `:Raise()`.
-
-### Geltungsbereiche
-
-Regeln, Ignorierliste und Behaltemengen haben jetzt je zwei Ebenen:
-
-| | Speicher | Wirkung |
-|---|---|---|
-| **A** – Alle Charaktere | `Warbrand-Fast-MailDB` | gilt überall |
-| **C** – Nur dieser Charakter | `Warbrand-Fast-MailCharDB` | gilt nur hier, **schlägt A** |
-
-In den Listen steht das Kürzel links vor jedem Eintrag; ein Klick darauf schiebt
-den Eintrag zwischen den Ebenen hin und her. Das Dropdown „Neue Einträge"
-bestimmt nur, wo *neu hinzugefügte* Items landen. `Leeren` räumt ausschließlich
-die dort gewählte Ebene.
-
-Regeln bekommen das Feld **Geltung**. Eine Char-Regel merkt sich ihren Besitzer;
-auf fremden Charakteren ist sie inaktiv und wird in der Liste grau mit dem
-Besitzernamen angezeigt. Erneutes Speichern stiehlt sie nicht — der Besitzer
-bleibt erhalten.
-
-### Selbst-Sperre: der Sammelchar-Fall
-
-Zeigt die **gewinnende** Regel auf den Charakter, der gerade läuft, bleibt der
-Gegenstand liegen und die Auswertung stoppt. Damit braucht der Sammelchar
-**keinen** eigenen Ignorier-Eintrag:
-
-Eine einzige globale Regel `Haustier-Glücksbringer → Sammelchar` genügt.
-
-| läuft auf | Glücksbringer | Quelle |
-|---|---|---|
-| Krieger | → Sammelchar | Regel |
-| Bergbauchar | → Sammelchar | Regel |
-| **Sammelchar** | **bleibt liegen** | Selbst-Sperre |
-
-Das Panel und `/wfm list` zeigen das als „X bleiben hier". Wichtig: die Sperre
-stoppt die Auswertung, statt zur nächsten Regel durchzufallen — sonst könnte
-eine allgemeinere Regel die gerade angekommenen Items gleich wieder wegschicken.
-
-## Was war neu in 1.3.0 (jetzt 12.1.0.3)
-
-### Behaltemenge pro Item
-
-„Ich habe 100 Heiltränke, behalte 20, verschick den Rest."
-Panel-Button **Behalten** (oder `/wfm keep`): Item hineinziehen, Zahl eintragen.
-
-Die Menge ist als **Untergrenze auf den Taschenbestand** formuliert, nicht als
-mitlaufender Zähler:
-
-```
-verfuegbar(itemID) = GetItemCount(itemID) - behalten(itemID)
-```
-
-Angehängte Gegenstände haben die Taschen bereits verlassen, der Wert schrumpft
-also von allein und landet exakt auf der Behaltemenge. Es muss nichts über
-Schritte hinweg mitgezählt werden — ein abgebrochener oder fortgesetzter Lauf
-kann nicht überschießen.
-
-**Teilstapel-Versand:** Passt der ganze Stapel nicht ins Budget, wird per
-`C_Container.SplitContainerItem` exakt die erlaubte Menge abgespalten und mit
-`ClickSendMailItemButton` in einen freien Anhangslot gelegt. Danach *immer*
-`ClearCursor()` — schlägt das Ablegen fehl, wandern die Stücke zurück in die
-Tasche statt am Cursor zu hängen.
-
-Beispiel mit 250 Tränken in 3 Stapeln (100/100/50), behalten 20:
-
-| Schritt | Stapel | Budget | Aktion | Taschen danach |
-|---|---|---|---|---|
-| 1 | 100 | 230 | ganzer Stapel | 150 |
-| 2 | 100 | 130 | ganzer Stapel | 50 |
-| 3 | 50 | 30 | **30 abspalten** | 20 |
-| 4 | — | 0 | fertig | 20 |
-
-Die Behaltemenge gilt account-weit als Einstellung, wird aber gegen die Taschen
-des laufenden Charakters geprüft — „jeder Char behält 20" ist die Lesart.
-
-Der Verteilplan zählt jetzt **Stück** statt Stapel, weil das mit Behaltemengen
-die aussagekräftige Zahl ist.
-
-Schnellbefehle: `/wfm keep` (Fenster), `/wfm keep 191383 20`, `/wfm keep 191383 0` (löschen).
-
-## Was war neu in 1.2.0 (jetzt 12.1.0.2)
-
-### Gold senden
-
-Panel-Button „Gold senden" überweist alles **oberhalb einer Rücklage** an einen fest
-hinterlegten Charakter. Standard-Rücklage: **100 Gold**.
-
-```
-sendbar = GetMoney() - Ruecklage - Porto
-```
-
-Porto (30 Kupfer) wird zusätzlich zur Rücklage abgezogen — die Rücklage bleibt
-exakt stehen. Ist das Ergebnis <= 0, bleibt der Button deaktiviert.
-
-Einstellungen unter `/wfm settings` (oder Panel-Button „Einstellungen"):
-Gold-Empfänger, Rücklage in Gold, Sicherheitsabfragen, Betreff.
-
-Schnellbefehle: `/wfm gold`, `/wfm goldtarget <name>`, `/wfm reserve 250`.
-
-Schutzmaßnahmen speziell für Gold:
-- Betrag wird **unmittelbar vor** `SendMail` neu berechnet, nie aus dem Dialog übernommen.
-- Empfängername wird beim Klick erneut gegen die Whitelist geprüft und mit dem
-  Dialoginhalt abgeglichen.
-- Bricht ab, wenn im Postfenster Gegenstände hängen — `SendMail` würde die mitschicken.
-- Bricht ab, solange ein Item-Versand läuft, und umgekehrt.
-- `SetSendMailCOD(0)` erzwungen, `SetSendMailMoney(0)` nach jedem Versuch zurückgesetzt.
-- Rücklage wird auf 0…9.999.999 Gold begrenzt und bei defekten SavedVars auf 100 g zurückgesetzt.
-
-## Was war neu in 1.1.0 (jetzt 12.1.0.1)
-
-### Bugfix: Panel öffnete nicht mit dem Briefkasten
-
-`MAIL_SHOW` feuert **bevor** Blizzard `ShowUIPanel(MailFrame)` aufruft. Der alte
-Handler prüfte `MailFrame:IsShown()` zu diesem Zeitpunkt — Ergebnis `false`, Panel
-wurde sofort wieder versteckt. Ob es überhaupt erschien, hing davon ab, ob zufällig
-später ein `BAG_UPDATE_DELAYED` kam.
-
-Neu: `MailFrame:HookScript("OnShow"/"OnHide")` statt Event-Race, zusätzlich ein
-`C_Timer.After(0, ...)`-Fallback und Behandlung von `Blizzard_MailFrame` als
-Load-on-Demand-Addon.
-
-### Regel-Engine
-
-Regelliste, von oben nach unten ausgewertet, **erste passende Regel gewinnt**.
-Was keine Regel trifft, geht an den Standard-Empfänger des Charakters.
-
-Jede Regel hat:
-
-| Feld | Wirkung |
-|---|---|
-| Empfänger | Pflichtfeld, `Name` oder `Name-Realm` |
-| Kategorie / Unterkategorie | z. B. Rüstung / Platte — Namen kommen lokalisiert vom Client |
-| Bindung | Egal / Kriegsmeute / Ungebunden (BoE) |
-| Mindestqualität | Arm … Erbstück |
-| Nur diese Items | Item-Liste; **wenn befüllt, zählen die Filter oben nicht mehr** |
-
-**Beispiel „Item X immer an Y":** Neue Regel → Empfänger `Y` → Item in die Liste
-„Nur diese Items" ziehen → Übernehmen.
-
-**Beispiel „alle Rüstungsteile, Kriegsmeute oder ungebunden, an Z":**
-Neue Regel → Empfänger `Z` → Kategorie `Rüstung` → Bindung `Egal` → Übernehmen.
-(„Egal" umfasst genau Kriegsmeute + Ungebunden; Seelengebundenes wird nie erfasst.)
-
-Regeln lassen sich einzeln deaktivieren (Checkbox) und mit `^` / `v` umsortieren —
-die Reihenfolge entscheidet bei Überschneidungen.
-
-### Ignorierliste
-
-Eigenes Fenster. Items per Drag & Drop hineinziehen, Link einfügen oder itemID
-tippen. Diese Gegenstände werden nie verschickt, unabhängig von allen Regeln.
-
-## Bedienung
-
-Briefkasten öffnen → Panel erscheint rechts daneben. Es zeigt den Verteilplan
-(„7 x Bankchar", „3 x Muli", „5 ohne Empfänger", „2 ignoriert") vor dem Versand.
-
-| Befehl | Wirkung |
-|---|---|
-| `/wfm send` | Alle Regeln ausführen |
-| `/wfm force <name>` | Regeln ignorieren, alles an einen Empfänger |
-| `/wfm target <name>` | Standard-Empfänger, dieser Char |
-| `/wfm target global <name>` | Standard-Empfänger, alle Chars |
-| `/wfm gold` | Gold abzüglich Rücklage senden |
-| `/wfm goldtarget <name>` | Gold-Empfänger, dieser Char |
-| `/wfm goldtarget global <name>` | Gold-Empfänger, alle Chars |
-| `/wfm reserve <gold>` | Rücklage setzen (Standard 100) |
-| `/wfm settings` | Einstellungen |
-| `/wfm rules` | Regelfenster |
-| `/wfm hold` | Behalteliste (auch `/wfm ignore`, `/wfm keep`) |
-| `/wfm hold <itemID>` | aktuellen Eintrag anzeigen |
-| `/wfm hold <itemID> 20` | 20 behalten, Rest senden |
-| `/wfm hold <itemID> -` | Eintrag löschen |
-| `/wfm hold char <itemID> 20` | dito, nur für diesen Charakter |
-| `/wfm list` | Verteilplan im Chat |
-| `/wfm unbound` | Standardregel nimmt auch BoE an/aus |
-| `/wfm confirm` | Sicherheitsabfrage an/aus |
-| `/wfm ui` | Panel an/aus |
-| `/wfm debug` | Debug-Ausgabe an/aus |
-| `/wfm version` | Version, Ziel-WoW und Client-Interface |
-
-## Erkennungslogik
-
-Drei Stufen, die erste eindeutige Antwort gewinnt. Ergebnis ist immer genau einer
-der Zustände `warbound` / `unbound` / `soulbound`:
-
-1. `C_Bank.IsItemAllowedInBankType(Enum.BankType.Account, loc)` + `C_Item.IsBound(loc)`
-   — sprachunabhängig und maßgeblich. Seelengebundenes ist in der Kriegsmeutenbank
-   nie erlaubt, Kriegsmeutengebundenes immer.
-2. `bindType` (Feld 14 aus `GetItemInfo`) gegen `Enum.ItemBind`
-   `ToWoWAccount` / `ToBnetAccount` / `*UntilEquipped` (numerisch 7/8/9).
-3. Tooltip-Scan über `C_TooltipInfo.GetBagItem` gegen Blizzards eigene lokalisierte
-   GlobalStrings. Keine hartcodierten Textbausteine.
-
-Angelegte „Kriegsmeutengebunden bis angelegt"-Teile sind seelengebunden und fallen
-bereits in Stufe 1 heraus.
-
-## Sicherheitsmaßnahmen
-
-- Empfängername: strikte Whitelist, blockt `|`-Escapes, Steuerzeichen, Quotes,
-  Backslashes — vor jedem `SendMail`, auch bei Regeln aus den SavedVariables.
-- Versand an sich selbst wird abgelehnt.
-- Bestätigungsdialog mit vollständigem Verteilplan (abschaltbar).
-- Harte Obergrenze 25 Mails pro Lauf.
-- Porto gegen `GetMoney()` vor jedem `SendMail`.
-- `SetSendMailCOD(0)` / `SetSendMailMoney(0)` erzwungen — nie Gold, nie Nachnahme.
-- Abbruch bei `MAIL_FAILED` und sobald der Briefkasten schließt.
-- Taschen werden vor **jedem einzelnen** Anhängen neu gescannt und neu geroutet;
-  veraltete Slot-Indizes sind konstruktiv ausgeschlossen.
-- Drei Fehlversuche pro Gegenstand, dann überspringen — kein Endlos-Loop.
-- Beim Teilstapel-Versand wird der Cursor gegen die **itemID** geprüft (nicht gegen
-  den Link-String) und anschließend bedingungslos geleert.
-- Keine Netzwerkzugriffe, kein `loadstring`, keine Addon-Kommunikation.
-
-## Architektur
+## Architecture
 
 ```
 Warbrand-Fast-Mail.toc
-Locale.lua        Sprach-Registry (Metatabelle, Fallback)
-lang\*.xml        DE/EN/FR/ES/IT, per [TextLocale] geladen
-Lib/Categories.lua Kategorienbaum aus dem Auktionshaus            (lesend)
-Lib/Util.lua      Ausgabe, Validierung, API-Compat-Shims       (zustandslos)
-Lib/Widgets.lua   Fenster, Dropdown, gescopte Item-Liste        (UI-Toolkit)
-Lib/Hold.lua      Behalteliste, Teilstapel-Budget              (lesend)
-Lib/Scanner.lua   Taschenscan + Bindungszustand + Metadaten    (lesend)
-Lib/Rules.lua     Regel-Matching, Auflösung, Verteilplan       (reine Logik)
-Lib/Mailer.lua    Zustandsautomat, mehrere Empfänger           (schreibend)
-Lib/Gold.lua      Goldüberweisung mit Rücklage                 (schreibend)
-Core.lua          SavedVariables, öffentliche API, Slash-Befehle
-UI.lua            Panel am Briefkasten
-Config.lua        Regel-, Behalte- und Einstellungsfenster
-tools/build_lang.py  Generator für lang\*.xml (nicht im Spiel geladen)
+Locale.lua           language registry (metatable, fallback)
+lang\*.xml           DE/EN/FR/ES/IT, loaded via [TextLocale]
+Lib/Util.lua         output, validation, API compat shims      (stateless)
+Lib/Widgets.lua      windows, dropdown, scoped item list       (UI toolkit)
+Lib/Categories.lua   category tree from the auction house      (read-only)
+Lib/Hold.lua         hold list, partial-stack budget           (read-only)
+Lib/Scanner.lua      bag scan, binding state, metadata         (read-only)
+Lib/Rules.lua        rule matching, resolution, plan           (pure logic)
+Lib/Mailer.lua       state machine, multiple recipients        (writing)
+Lib/Gold.lua         gold transfer with reserve                (writing)
+Core.lua             SavedVariables, public API, slash commands
+UI.lua               panel at the mailbox
+Config.lua           rules, hold and settings windows
+tools/build_lang.py  generator for lang\*.xml (not loaded in game)
 ```
 
-`Lib/` ist frei wiederverwendbar. `Util` und `Widgets` sind abhängigkeitsfrei,
-`Keep` hängt nur an `Util`, `Scanner` an `Util` + `Keep`. `Widgets` verzichtet bewusst auf `UIDropDownMenu`,
-`FauxScrollFrame` und die neue `MenuUtil`-API — beide Generationen wurden von
-Blizzard bereits umgebaut.
+`Lib/` is freely reusable. `Util` and `Widgets` have no dependencies, `Hold` depends only on `Util`, `Scanner` on `Util` + `Hold`. `Widgets` deliberately avoids `UIDropDownMenu`, `FauxScrollFrame` and the newer `MenuUtil` API — Blizzard has already rebuilt both generations.
 
 ## SavedVariables
 
-- `Warbrand-Fast-MailDB` — account-weit: Regeln, Behalteliste, Standard-Empfänger,
-  Gold-Empfänger, Rücklage, Fensterpositionen
-- `Warbrand-Fast-MailCharDB` — pro Charakter: Standard-Empfänger, Gold-Empfänger,
-  eigene Behalteliste
+- `WarbrandFastMailDB` — account-wide: rules, hold list, default recipient, gold recipient, reserve, window positions
+- `WarbrandFastMailCharDB` — per character: default recipient, gold recipient, own hold list
 
-## Lizenz
+## Support
+
+If this add-on saved you time, you can support further development:
+
+[![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=6CDEVZGJWTNQQ)
+
+## License
 
 MIT © 2026 Thomas Weirich
