@@ -406,9 +406,10 @@ local function Help()
     end
 end
 
+-- No short generic alias on purpose: "/warbrand" is the kind of name
+-- another addon claims, and the last registration wins.
 SLASH_WARBRANDFASTMAIL1 = "/warbrand-fast-mail"
-SLASH_WARBRANDFASTMAIL2 = "/warbrand"
-SLASH_WARBRANDFASTMAIL3 = "/wfm"
+SLASH_WARBRANDFASTMAIL2 = "/wfm"
 SlashCmdList["WARBRANDFASTMAIL"] = function(msg)
     msg = Util.Trim(tostring(msg or ""))
     local cmd, rest = msg:match("^(%S*)%s*(.*)$")

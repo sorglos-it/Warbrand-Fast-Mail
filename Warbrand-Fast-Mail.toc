@@ -4,7 +4,7 @@
 ## Notes: Routes warbound items to recipients by rule, mails them and transfers gold.
 ## Notes-deDE: Verteilt kriegsmeutengebundene Gegenstaende regelbasiert per Post und ueberweist Gold.
 ## Author: Thomas Weirich
-## Version: 12.1.0.7
+## Version: 12.1.0.8
 ## X-License: MIT
 ## X-Website: https://github.com/sorglos-it/Warbrand-Fast-Mail
 ## IconTexture: Interface\Icons\INV_Letter_15
