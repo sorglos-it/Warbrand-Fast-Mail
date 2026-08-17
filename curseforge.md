@@ -2,6 +2,8 @@
 
 **Empties your bags into the mailbox by rule.**
 
+**Fully translated: Deutsch · English · Español · Français · Italiano.** The add-on follows your game client — there is no language setting to find.
+
 Open a mailbox and a panel appears beside it showing exactly where every item is going — "7 × Bankchar", "3 × Muli", "5 without recipient", "2 held". One button sends them, in batches of 12, to as many different characters as your rules name.
 
 It moves **warbound** and **unbound (BoE)** items. Soulbound gear is never touched, and that is determined from the API rather than from tooltip text, so it does not depend on your client language.
@@ -95,6 +97,29 @@ Sending mail automatically is only acceptable if it cannot go wrong quietly:
 - Bags are rescanned and rerouted before **every single** attachment, so stale slot indices are impossible by construction
 - Three failed attempts per item, then it is skipped — no endless loop
 - Gold specifically: the amount is recalculated immediately before sending and never taken from the dialog, the recipient is re-validated on click, and the transfer refuses to run while items are attached
+
+---
+
+## Languages
+
+Five languages in six locale files, picked from your game client automatically:
+
+| Language | Client locale |
+|---|---|
+| Deutsch | `deDE` |
+| English | `enUS` / `enGB` |
+| Español (España) | `esES` |
+| Español (México) | `esMX` |
+| Français | `frFR` |
+| Italiano | `itIT` |
+
+**Everything** is translated, not just the buttons: every window, every chat message, every tooltip, the confirmation dialogs and the complete slash-command help. All six files carry the same 161 strings, checked against the English base so no language can quietly fall behind.
+
+Category names, subcategories and item qualities are not translated by hand at all — they come localized straight from the client, so they always read exactly as they do in your auction house.
+
+Playing in a language that is not on the list? Nothing breaks: the add-on falls back to English.
+
+**Warbrand-Fast-Mail** is a brand and stays untranslated everywhere.
 
 ---
 
