@@ -68,7 +68,7 @@ A confirmation dialog with the full plan appears first; it can be switched off w
 
 ## Slash commands
 
-Both `/wfm` and `/warbrand` work.
+Three aliases drive the same command: `/warbrand-fast-mail` (the full name), `/warbrand`, and `/wfm`. The short form is used throughout this table and in the in-game help.
 
 | Command | Effect |
 |---|---|
@@ -191,7 +191,7 @@ Equipped "warbound until equipped" pieces are soulbound and already drop out at 
 ## Versioning
 
 ```
-12 . 1 . 0 . 6
+12 . 1 . 0 . 7
 └──┬──┘   │   └── addon build counter
    │      └────── WoW patch
    └───────────── WoW version this copy was built for

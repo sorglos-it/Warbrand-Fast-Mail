@@ -38,9 +38,10 @@ NEW = {
   'CAT_SOURCE_AH':  "Categories taken from the auction house.",
   'CAT_SOURCE_FB':  "Auction house not loaded, using the built-in category list.",
   'LOCALE_INFO':    "Language: %s",
-  'CHECK_LINE':     "%s  behalten=%s (%s)  Taschen: Scan=%d, GetItemCount=%d  Budget=%s",
-  'CHECK_NONE':     "%s steht nicht auf der Behalteliste.",
-  'HELP_CHECK':     "/wfm check <itemID> - Zahlen hinter einem Behalte-Eintrag",
+  'CHECK_LINE':     "%s  keep=%s (%s)  bags: scan=%d, GetItemCount=%d  budget=%s",
+  'CHECK_NONE':     "%s is not on the hold list.",
+  'CHECK_UNLIMITED': "unlimited",
+  'HELP_CHECK':     "/wfm check <itemID> - the numbers behind a hold entry",
   'UI_SENDALL':      "Items + gold",
   'UI_SENDALL_TIP':  "Mails every item first and puts the gold on the last mail to its recipient, so you pay one postage less.",
  },
@@ -66,6 +67,7 @@ NEW = {
   'LOCALE_INFO':    "Sprache: %s",
   'CHECK_LINE':     "%s  behalten=%s (%s)  Taschen: Scan=%d, GetItemCount=%d  Budget=%s",
   'CHECK_NONE':     "%s steht nicht auf der Behalteliste.",
+  'CHECK_UNLIMITED': "unbegrenzt",
   'HELP_CHECK':     "/wfm check <itemID> - Zahlen hinter einem Behalte-Eintrag",
   'UI_SENDALL':      "Items + Gold",
   'UI_SENDALL_TIP':  "Verschickt erst alle Gegenstaende und haengt das Gold an die letzte Mail an seinen Empfaenger. Spart ein Porto.",
@@ -75,7 +77,7 @@ NEW = {
 # ---------------------------------------------------------------- FR / ES / IT
 FR = {
  'LOADED': "v%s charge. |cffffff00/wfm|r pour l'aide.",
- 'UI_TITLE': "Courrier de bataillon", 'UI_FALLBACK': "Destinataire par defaut, ce personnage",
+ 'UI_TITLE': "Warbrand-Fast-Mail", 'UI_FALLBACK': "Destinataire par defaut, ce personnage",
  'UI_SEND': "Envoyer", 'UI_RULES': "Regles", 'UI_IGNORE': "Ignorer", 'UI_SCAN': "Rescanner",
  'UI_NOTHING': "Rien a envoyer", 'UI_UNBOUND': "La regle par defaut prend aussi les objets non lies",
  'UI_PLANLINE': "%d x |cffffff00%s|r", 'UI_UNROUTED': "|cff888888%d sans destinataire|r",
@@ -170,14 +172,14 @@ FR = {
  'CAT_SOURCE_AH': "Categories reprises de l'hotel des ventes.",
  'CAT_SOURCE_FB': "Hotel des ventes non charge, liste de categories integree utilisee.",
  'LOCALE_INFO': "Langue : %s",
- 'CHECK_LINE': "%s  garder=%s (%s)  sacs : scan=%d, GetItemCount=%d  budget=%s", 'CHECK_NONE': "%s n'est pas dans la liste de retenue.", 'HELP_CHECK': "/wfm check <itemID> - chiffres derriere une entree de retenue",
+ 'CHECK_LINE': "%s  garder=%s (%s)  sacs : scan=%d, GetItemCount=%d  budget=%s", 'CHECK_NONE': "%s n'est pas dans la liste de retenue.", 'CHECK_UNLIMITED': "illimite", 'HELP_CHECK': "/wfm check <itemID> - chiffres derriere une entree de retenue",
  'UI_SENDALL': "Objets + or",
  'UI_SENDALL_TIP': "Envoie d'abord tous les objets puis joint l'or au dernier courrier destine a son destinataire. Un affranchissement de moins.",
 }
 
 ES = {
  'LOADED': "v%s cargado. |cffffff00/wfm|r para la ayuda.",
- 'UI_TITLE': "Correo de la banda", 'UI_FALLBACK': "Destinatario por defecto, este personaje",
+ 'UI_TITLE': "Warbrand-Fast-Mail", 'UI_FALLBACK': "Destinatario por defecto, este personaje",
  'UI_SEND': "Enviar", 'UI_RULES': "Reglas", 'UI_IGNORE': "Ignorar", 'UI_SCAN': "Reescanear",
  'UI_NOTHING': "Nada que enviar", 'UI_UNBOUND': "La regla por defecto tambien toma objetos no ligados",
  'UI_PLANLINE': "%d x |cffffff00%s|r", 'UI_UNROUTED': "|cff888888%d sin destinatario|r",
@@ -272,14 +274,14 @@ ES = {
  'CAT_SOURCE_AH': "Categorias tomadas de la casa de subastas.",
  'CAT_SOURCE_FB': "Casa de subastas no cargada, se usa la lista de categorias integrada.",
  'LOCALE_INFO': "Idioma: %s",
- 'CHECK_LINE': "%s  guardar=%s (%s)  bolsas: escaneo=%d, GetItemCount=%d  presupuesto=%s", 'CHECK_NONE': "%s no esta en la lista de retencion.", 'HELP_CHECK': "/wfm check <itemID> - cifras tras una entrada de retencion",
+ 'CHECK_LINE': "%s  guardar=%s (%s)  bolsas: escaneo=%d, GetItemCount=%d  presupuesto=%s", 'CHECK_NONE': "%s no esta en la lista de retencion.", 'CHECK_UNLIMITED': "ilimitado", 'HELP_CHECK': "/wfm check <itemID> - cifras tras una entrada de retencion",
  'UI_SENDALL': "Objetos + oro",
  'UI_SENDALL_TIP': "Envia primero todos los objetos y adjunta el oro al ultimo correo a su destinatario. Un franqueo menos.",
 }
 
 IT = {
  'LOADED': "v%s caricato. |cffffff00/wfm|r per l'aiuto.",
- 'UI_TITLE': "Posta della compagnia", 'UI_FALLBACK': "Destinatario predefinito, questo personaggio",
+ 'UI_TITLE': "Warbrand-Fast-Mail", 'UI_FALLBACK': "Destinatario predefinito, questo personaggio",
  'UI_SEND': "Invia", 'UI_RULES': "Regole", 'UI_IGNORE': "Ignora", 'UI_SCAN': "Riscansiona",
  'UI_NOTHING': "Niente da inviare", 'UI_UNBOUND': "La regola predefinita prende anche gli oggetti non legati",
  'UI_PLANLINE': "%d x |cffffff00%s|r", 'UI_UNROUTED': "|cff888888%d senza destinatario|r",
@@ -374,7 +376,7 @@ IT = {
  'CAT_SOURCE_AH': "Categorie prese dalla casa d'aste.",
  'CAT_SOURCE_FB': "Casa d'aste non caricata, uso l'elenco di categorie integrato.",
  'LOCALE_INFO': "Lingua: %s",
- 'CHECK_LINE': "%s  trattieni=%s (%s)  borse: scansione=%d, GetItemCount=%d  budget=%s", 'CHECK_NONE': "%s non e nella lista di ritenzione.", 'HELP_CHECK': "/wfm check <itemID> - numeri dietro una voce di ritenzione",
+ 'CHECK_LINE': "%s  trattieni=%s (%s)  borse: scansione=%d, GetItemCount=%d  budget=%s", 'CHECK_NONE': "%s non e nella lista di ritenzione.", 'CHECK_UNLIMITED': "illimitato", 'HELP_CHECK': "/wfm check <itemID> - numeri dietro una voce di ritenzione",
  'UI_SENDALL': "Oggetti + oro",
  'UI_SENDALL_TIP': "Spedisce prima tutti gli oggetti e allega l'oro all'ultimo messaggio al suo destinatario. Un'affrancatura in meno.",
 }

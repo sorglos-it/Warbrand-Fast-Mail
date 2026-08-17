@@ -304,7 +304,7 @@ handlers["check"] = function(rest)
     Util.Print(L.CHECK_LINE, link,
         (value == true) and L.HOLD_ALL or tostring(value),
         scope or "?", scanTotal, apiTotal,
-        (budget == math.huge) and "unbegrenzt" or tostring(budget))
+        (budget == math.huge) and L.CHECK_UNLIMITED or tostring(budget))
 end
 handlers["pruefen"] = handlers["check"]
 
@@ -406,8 +406,9 @@ local function Help()
     end
 end
 
-SLASH_WARBRANDFASTMAIL1 = "/wfm"
+SLASH_WARBRANDFASTMAIL1 = "/warbrand-fast-mail"
 SLASH_WARBRANDFASTMAIL2 = "/warbrand"
+SLASH_WARBRANDFASTMAIL3 = "/wfm"
 SlashCmdList["WARBRANDFASTMAIL"] = function(msg)
     msg = Util.Trim(tostring(msg or ""))
     local cmd, rest = msg:match("^(%S*)%s*(.*)$")

@@ -8,7 +8,7 @@ local ADDON, ns = ...
 local Util = {}
 ns.Util = Util
 
-local PREFIX = "|cff33ff99wfm|r: "
+local PREFIX = "|cff33ff99Warbrand-Fast-Mail|r: "
 
 -- --- Output ------------------------------------------------
 
