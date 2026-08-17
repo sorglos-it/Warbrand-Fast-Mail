@@ -182,9 +182,6 @@ local function BuildEditor(f)
     e.items:SetPoint("TOPLEFT", 18, -464)
     e.items.hint:SetPoint("TOPLEFT", 356, -468)
     e.items.hint:SetWidth(146)
-    e.items.editBox:SetPoint("TOPLEFT", 22, -540)
-    e.items.editBox:SetWidth(264)
-    e.items.clearButton:SetPoint("TOPLEFT", 294, -542)
 
     e.apply = W.Button(f, 140, L.CFG_APPLY, function()
         draft.label     = Util.Trim(e.name:GetText())
@@ -459,7 +456,10 @@ local function BuildHoldWindow()
         getSearch   = function() return f.search:GetText() end,
         onChange    = function() if ns.UI then ns.UI:Refresh() end end,
     })
-    box:SetPoint("TOPLEFT", 18, -80)
+    -- 16px lower than the list would otherwise sit: the "Keep" column
+    -- header hangs off this frame's top edge and needs a band of its own,
+    -- or it lands on top of the search row.
+    box:SetPoint("TOPLEFT", 18, -96)
 
     search:SetScript("OnTextChanged", function()
         box:ResetScroll()
@@ -475,17 +475,13 @@ local function BuildHoldWindow()
     local col = W.Label(f, L.HOLD_COL, "GameFontNormalSmall")
     col:SetPoint("BOTTOMRIGHT", box, "TOPRIGHT", -26, 2)
 
-    box.hint:SetPoint("TOPLEFT", 18, -288)
+    box.hint:SetPoint("TOPLEFT", 18, -304)
 
     local scopeLbl = W.Label(f, L.SCOPE_NEW)
-    scopeLbl:SetPoint("TOPLEFT", 18, -314)
+    scopeLbl:SetPoint("TOPLEFT", 18, -330)
     local sel = ScopeSelector(f, 200, nil, function(v) f.newScope = v end)
-    sel:SetPoint("TOPLEFT", 128, -310)
+    sel:SetPoint("TOPLEFT", 128, -326)
     sel:SetValue("global", true)
-
-    box.editBox:SetPoint("TOPLEFT", 22, -346)
-    box.editBox:SetWidth(330)
-    box.clearButton:SetPoint("TOPLEFT", 362, -348)
 
     f.box = box
     return f
@@ -610,7 +606,7 @@ local function BuildSettingsWindow()
         ns.db.includeUnbound = s.unbound:GetChecked() and true or false
 
         local subject = Util.Trim(s.subject:GetText())
-        ns.db.subject = (subject ~= "" and subject) or "Warband"
+        ns.db.subject = (subject ~= "" and subject) or Util.DEFAULT_SUBJECT
 
         Util.Print(L.SET_SAVED)
         Config:RefreshSettings()

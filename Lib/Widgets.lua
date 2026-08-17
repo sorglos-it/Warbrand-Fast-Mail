@@ -244,11 +244,8 @@ end
 -- In counted mode a value of true means "keep everything" and renders
 -- as an empty box; a number means "keep that many".
 
-local activeDropEditBox
-
--- Emptying a list is destructive and its button sits right next to the
--- add field, where "Clear" reads as "clear that field". Ask first, and
--- say how many entries are at stake.
+-- Emptying a list is destructive and cannot be undone, so it asks first
+-- and says how many entries are at stake.
 StaticPopupDialogs["WARBRANDFASTMAIL_CLEARLIST"] = {
     text           = "%s",
     button1        = YES or "Yes",
@@ -465,23 +462,6 @@ function W.ItemScopeList(parent, width, height, opts)
     box:SetScript("OnReceiveDrag", AddFromCursor)
     box:SetScript("OnMouseDown", AddFromCursor)
 
-    box.editBox = W.EditBox(parent, width - 66, 128, function(self, text)
-        Add(Util.ToItemID(text))
-        self:SetText("")
-    end)
-    box.editBox:SetScript("OnEditFocusGained", function(self) activeDropEditBox = self end)
-    box.editBox:SetScript("OnEditFocusLost", function(self)
-        if activeDropEditBox == self then activeDropEditBox = nil end
-    end)
-    -- The hint label sits next to the list, not next to this box, so the
-    -- field reads like an unlabelled input right beside a Clear button.
-    box.editBox:SetScript("OnEnter", function(self)
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(L.CFG_DROPHERE, 1, 1, 1, 1, true)
-        GameTooltip:Show()
-    end)
-    box.editBox:SetScript("OnLeave", GameTooltip_Hide)
-
     box.clearButton = W.Button(parent, 60, L.CFG_CLEAR, function()
         local g, c = Tables()
         local t = (scoped and opts.getNewScope() == "char") and c or g
@@ -510,17 +490,10 @@ function W.ItemScopeList(parent, width, height, opts)
         GameTooltip:Show()
     end)
     box.clearButton:SetScript("OnLeave", GameTooltip_Hide)
+    -- Anchored here rather than by each caller: the button belongs in the
+    -- same corner of every window that hosts one of these lists.
+    box.clearButton:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -14, 12)
 
     box.hint = W.Label(parent, L.CFG_DROPHERE, "GameFontDisableSmall")
     return box
-end
-
--- Shift-click on any item inserts its link into a focused wfm edit box.
-if type(_G.HandleModifiedItemClick) == "function" then
-    hooksecurefunc("HandleModifiedItemClick", function(link)
-        if not (activeDropEditBox and activeDropEditBox:IsVisible()) then return end
-        if not IsShiftKeyDown() then return end
-        local id = Util.ToItemID(link)
-        if id then activeDropEditBox:SetText(tostring(id)) end
-    end)
 end

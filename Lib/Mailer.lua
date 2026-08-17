@@ -270,7 +270,7 @@ function Mailer:Dispatch()
     if GetMoney() < price then return self:Abort(L.NO_MONEY) end
 
     local subject = ns.db.subject
-    if type(subject) ~= "string" or subject == "" then subject = "Warband" end
+    if type(subject) ~= "string" or subject == "" then subject = Util.DEFAULT_SUBJECT end
     local body = type(ns.db.body) == "string" and ns.db.body or ""
 
     if SendMailNameEditBox    then SendMailNameEditBox:SetText(S.recipient) end

@@ -25,7 +25,7 @@
             CFG_CLEARCONFIRM = "Remove all |cffffff00%d|r entries from this list?",
             CFG_CLEARTIP     = "Empties the whole list. To remove a single entry use the red x on its row.",
             CFG_DELETE       = "Delete",
-            CFG_DROPHERE     = "Drag item here or paste link/ID",
+            CFG_DROPHERE     = "Drag an item onto the list",
             CFG_EDIT         = "Edit rule",
             CFG_HINT         = "First matching rule wins. Order matters.",
             CFG_INERT        = "inert here",

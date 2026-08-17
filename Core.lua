@@ -46,7 +46,7 @@ local DEFAULTS = {
     includeUnbound = false,  -- implicit default rule also takes BoE
     confirm        = true,
     debug          = false,
-    subject        = "Warband",
+    subject        = Util.DEFAULT_SUBJECT,
     body           = "",
     gold           = {
         recipient = "",                       -- fixed character, account-wide
@@ -439,6 +439,12 @@ init:SetScript("OnEvent", function(self, _, name)
     if ns.db.minQuality ~= nil then ns.db.minQuality = nil end
     ns.Hold.Migrate(ns.db)
     ns.Hold.Migrate(ns.charDB)
+    -- Earlier builds defaulted the subject to "Kriegsmeute", then to
+    -- "Warband". ApplyDefaults only fills nil, so a stored default would
+    -- outlive the rename; a subject the user typed themselves is kept.
+    if ns.db.subject == "Warband" or ns.db.subject == "Kriegsmeute" then
+        ns.db.subject = Util.DEFAULT_SUBJECT
+    end
     _G.WarbrandFastMail_RegisterLocale = nil
     if type(ns.db.target) ~= "string" then ns.db.target = "" end
     if type(ns.charDB.target) ~= "string" then ns.charDB.target = "" end

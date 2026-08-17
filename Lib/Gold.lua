@@ -128,7 +128,7 @@ function Gold.Execute(recipient)
     Util.Try(SetSendMailMoney, amount)
 
     local subject = ns.db.subject
-    if type(subject) ~= "string" or subject == "" then subject = "Warband" end
+    if type(subject) ~= "string" or subject == "" then subject = Util.DEFAULT_SUBJECT end
 
     if SendMailNameEditBox    then SendMailNameEditBox:SetText(verified) end
     if SendMailSubjectEditBox then SendMailSubjectEditBox:SetText(subject) end

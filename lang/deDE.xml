@@ -25,7 +25,7 @@
             CFG_CLEARCONFIRM = "Alle |cffffff00%d|r Eintraege aus dieser Liste entfernen?",
             CFG_CLEARTIP     = "Leert die ganze Liste. Einzelne Eintraege entfernt das rote x in der Zeile.",
             CFG_DELETE       = "Loeschen",
-            CFG_DROPHERE     = "Item hierher ziehen oder Link/ID einfuegen",
+            CFG_DROPHERE     = "Item auf die Liste ziehen",
             CFG_EDIT         = "Regel bearbeiten",
             CFG_HINT         = "Die erste passende Regel gewinnt. Reihenfolge zaehlt.",
             CFG_INERT        = "hier inaktiv",

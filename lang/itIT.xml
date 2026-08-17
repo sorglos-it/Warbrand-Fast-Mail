@@ -25,7 +25,7 @@
             CFG_CLEARCONFIRM = "Rimuovere tutte le |cffffff00%d|r voci da questa lista?",
             CFG_CLEARTIP     = "Svuota l'intera lista. Per togliere una singola voce usa la x rossa nella riga.",
             CFG_DELETE       = "Elimina",
-            CFG_DROPHERE     = "Trascina qui un oggetto o incolla link / ID",
+            CFG_DROPHERE     = "Trascina un oggetto sulla lista",
             CFG_EDIT         = "Modifica regola",
             CFG_HINT         = "Vince la prima regola che corrisponde. L'ordine conta.",
             CFG_INERT        = "inattiva qui",

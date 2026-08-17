@@ -25,7 +25,7 @@
             CFG_CLEARCONFIRM = "Eliminar las |cffffff00%d|r entradas de esta lista?",
             CFG_CLEARTIP     = "Vacia toda la lista. Para quitar una sola entrada usa la x roja de su fila.",
             CFG_DELETE       = "Borrar",
-            CFG_DROPHERE     = "Arrastra un objeto aqui o pega un enlace / ID",
+            CFG_DROPHERE     = "Arrastra un objeto a la lista",
             CFG_EDIT         = "Editar regla",
             CFG_HINT         = "Gana la primera regla que coincide. El orden importa.",
             CFG_INERT        = "inactiva aqui",

@@ -25,7 +25,7 @@
             CFG_CLEARCONFIRM = "Supprimer les |cffffff00%d|r entrees de cette liste ?",
             CFG_CLEARTIP     = "Vide toute la liste. Pour retirer une seule entree, utilisez la x rouge de sa ligne.",
             CFG_DELETE       = "Supprimer",
-            CFG_DROPHERE     = "Glissez un objet ici ou collez un lien / ID",
+            CFG_DROPHERE     = "Glissez un objet sur la liste",
             CFG_EDIT         = "Modifier la regle",
             CFG_HINT         = "La premiere regle qui correspond gagne. L'ordre compte.",
             CFG_INERT        = "inactive ici",

@@ -10,6 +10,11 @@ ns.Util = Util
 
 local PREFIX = "|cff33ff99Warbrand-Fast-Mail|r: "
 
+-- Subject line used when the user has not set one. Defined once here
+-- because four call sites need the same fallback: the defaults table,
+-- the settings window, the mailer and the gold transfer.
+Util.DEFAULT_SUBJECT = "Warbrand-Fast-Mail"
+
 -- --- Output ------------------------------------------------
 
 function Util.Print(fmt, ...)
