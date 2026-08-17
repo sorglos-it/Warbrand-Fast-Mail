@@ -248,18 +248,23 @@ handlers["regeln"] = handlers["rules"]
 
 handlers["hold"] = function(rest)
     rest = Util.Trim(rest)
-    local scope = "global"
+    local scope, explicitScope = "global", false
     local head = rest:match("^(%S*)")
     if head == "char" or head == "global" then
-        scope = head
+        scope, explicitScope = head, true
         rest = Util.Trim(rest:sub(#head + 1))
     end
 
-    local idPart, amountPart = rest:match("^(%S*)%s*(%S*)$")
-    if not idPart or idPart == "" then
+    if rest == "" then
         if ns.Config then ns.Config:ToggleHold() end
         return
     end
+
+    -- %S+ on purpose: with %S* a third token made both captures nil and
+    -- fell through to the no-arguments branch, so a mistyped command
+    -- silently opened the window instead of reporting itself.
+    local idPart, amountPart = rest:match("^(%S+)%s*(%S*)$")
+    if not idPart then return Util.Print(L.HOLD_BADNUM, rest) end
 
     local itemID = Util.ToItemID(idPart)
     if not itemID then return Util.Print(L.BAD_NAME, idPart) end
@@ -272,7 +277,10 @@ handlers["hold"] = function(rest)
     end
 
     if amountPart == "-" or amountPart == "off" then
-        ns.Hold.Clear(itemID)
+        -- No scope given means "delete this entry", so both levels go.
+        -- With a scope it stays on that level, which is what the rest of
+        -- the command already did for setting and reading.
+        ns.Hold.Clear(itemID, explicitScope and scope or nil)
         Util.Print(L.HOLD_CLEARED, Util.ItemLink(itemID))
     elseif not ns.Hold.Set(itemID, amountPart, scope) then
         return Util.Print(L.HOLD_BADNUM, amountPart)
@@ -391,8 +399,11 @@ end
 handlers["v"] = handlers["version"]
 
 handlers["ui"] = function()
-    ns.db.ui.show = not ns.db.ui.show
-    if ns.UI and ns.UI.Refresh then ns.UI:Refresh() end
+    if ns.UI and ns.UI.SetEnabled then
+        ns.UI:SetEnabled(not ns.db.ui.show)
+    else
+        ns.db.ui.show = not ns.db.ui.show
+    end
 end
 
 local function Help()

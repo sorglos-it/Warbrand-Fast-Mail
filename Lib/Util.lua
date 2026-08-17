@@ -175,13 +175,26 @@ end
 local CHAR_PATTERN  = "^[%a\128-\255][%a\128-\255]*$"
 local REALM_PATTERN = "^[%a\128-\255][%a\128-\255'%-]*$"
 
+---Length in characters, not bytes. The name patterns deliberately accept
+---\128-\255, where one character costs two or more bytes in UTF-8, so a
+---byte count rejected perfectly legal Cyrillic and Korean names well
+---below the limit the server enforces.
+local function ULen(s)
+    if type(_G.strlenutf8) == "function" then
+        local n = _G.strlenutf8(s)
+        if n then return n end
+    end
+    if utf8 and utf8.len then return utf8.len(s) or #s end
+    return #s
+end
+
 ---@return string|nil normalised, string|nil errorReason
 function Util.NormalizeRecipient(input)
     if type(input) ~= "string" then return nil, "type" end
 
     local name = Util.Trim(input)
     if name == "" then return nil, "empty" end
-    if #name > 48 then return nil, "length" end
+    if ULen(name) > 48 then return nil, "length" end
     if name:find("|", 1, true) then return nil, "escape" end
     if name:find("%c") then return nil, "control" end
     if name:find('"', 1, true) or name:find("\\", 1, true) then return nil, "quote" end
@@ -190,7 +203,8 @@ function Util.NormalizeRecipient(input)
     if not charPart then charPart, realmPart = name, nil end
 
     if not charPart:match(CHAR_PATTERN) then return nil, "charname" end
-    if #charPart < 2 or #charPart > 24 then return nil, "charlen" end
+    local charLen = ULen(charPart)
+    if charLen < 2 or charLen > 24 then return nil, "charlen" end
 
     if realmPart then
         realmPart = realmPart:gsub("%s+", "")

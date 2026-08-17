@@ -127,18 +127,31 @@ function Hold.Set(itemID, value, scope)
         return false
     end
 
-    local target = (scope == "char") and ns.charDB.hold or ns.db.hold
-    local other  = (scope == "char") and ns.db.hold or ns.charDB.hold
+    local toChar = (scope == "char")
+    local target = toChar and ns.charDB.hold or ns.db.hold
+    local other  = toChar and ns.db.hold or ns.charDB.hold
+    -- The and/or idiom silently falls through to the global table when the
+    -- character one is missing, which would write the entry to the wrong
+    -- scope instead of failing. Migrate guarantees both today; say so.
+    if type(target) ~= "table" or type(other) ~= "table" then return false end
     target[itemID] = value
     other[itemID]  = nil
     return true
 end
 
-function Hold.Clear(itemID)
+---@param scope string|nil  "char" or "global" clears only that level,
+---                         nil clears the entry wherever it lives
+function Hold.Clear(itemID, scope)
     itemID = Util.ToItemID(itemID)
     if not itemID then return false end
-    ns.db.hold[itemID] = nil
-    ns.charDB.hold[itemID] = nil
+    if scope == "char" then
+        if type(ns.charDB.hold) == "table" then ns.charDB.hold[itemID] = nil end
+    elseif scope == "global" then
+        if type(ns.db.hold) == "table" then ns.db.hold[itemID] = nil end
+    else
+        if type(ns.db.hold) == "table" then ns.db.hold[itemID] = nil end
+        if type(ns.charDB.hold) == "table" then ns.charDB.hold[itemID] = nil end
+    end
     return true
 end
 

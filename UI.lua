@@ -18,6 +18,12 @@ local panel
 local PLAN_LINES = 5
 local hooked = false
 
+-- "Hidden until the mailbox is opened again", which is what the X button
+-- means. Kept apart from ns.db.ui.show, the persistent on/off behind
+-- /wfm ui: both used to write that one flag, so every mailbox reopen
+-- switched the persisted setting back on and /wfm ui never stuck.
+local sessionHidden = false
+
 -- --- Construction ------------------------------------------
 
 local function BuildPanel()
@@ -26,7 +32,7 @@ local function BuildPanel()
 
     -- close button only hides for this session
     f.closeButton:SetScript("OnClick", function()
-        ns.db.ui.show = false
+        sessionHidden = true
         f:Hide()
     end)
 
@@ -184,7 +190,7 @@ end
 function UI:Refresh(skipPlan)
     if not panel then return end
 
-    if not (ns.db.ui.show and MailFrame and MailFrame:IsShown()) then
+    if sessionHidden or not (ns.db.ui.show and MailFrame and MailFrame:IsShown()) then
         return panel:Hide()
     end
 
@@ -250,7 +256,7 @@ local function HookMailFrame()
     if hooked or not MailFrame then return end
     hooked = true
     MailFrame:HookScript("OnShow", function()
-        ns.db.ui.show = true
+        sessionHidden = false
         UI:Refresh()
     end)
     MailFrame:HookScript("OnHide", function()
@@ -289,6 +295,15 @@ function UI:Init()
         -- next frame: by then Blizzard has actually shown MailFrame
         C_Timer.After(0, function() UI:Refresh() end)
     end)
+end
+
+---Persistent on/off behind /wfm ui. Switching it on also drops a session
+---hide, so the command takes effect on the open mailbox instead of only
+---after the next one.
+function UI:SetEnabled(on)
+    ns.db.ui.show = on and true or false
+    if ns.db.ui.show then sessionHidden = false end
+    self:Refresh()
 end
 
 function UI:IsShown()

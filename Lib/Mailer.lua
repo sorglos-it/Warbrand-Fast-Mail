@@ -59,6 +59,7 @@ local function ResetState()
         withGold  = false,
         goldSent  = false,
         goldAmount = 0,
+        goldOnThisMail = 0,  -- set per dispatch; belongs to the run state
     }
 end
 ResetState()
