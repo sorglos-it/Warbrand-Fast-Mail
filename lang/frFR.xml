@@ -22,6 +22,8 @@
             CFG_BIND         = "Liaison",
             CFG_CATEGORY     = "Categorie",
             CFG_CLEAR        = "Vider",
+            CFG_CLEARCONFIRM = "Supprimer les |cffffff00%d|r entrees de cette liste ?",
+            CFG_CLEARTIP     = "Vide toute la liste. Pour retirer une seule entree, utilisez la x rouge de sa ligne.",
             CFG_DELETE       = "Supprimer",
             CFG_DROPHERE     = "Glissez un objet ici ou collez un lien / ID",
             CFG_EDIT         = "Modifier la regle",

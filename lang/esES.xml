@@ -22,6 +22,8 @@
             CFG_BIND         = "Ligadura",
             CFG_CATEGORY     = "Categoria",
             CFG_CLEAR        = "Vaciar",
+            CFG_CLEARCONFIRM = "Eliminar las |cffffff00%d|r entradas de esta lista?",
+            CFG_CLEARTIP     = "Vacia toda la lista. Para quitar una sola entrada usa la x roja de su fila.",
             CFG_DELETE       = "Borrar",
             CFG_DROPHERE     = "Arrastra un objeto aqui o pega un enlace / ID",
             CFG_EDIT         = "Editar regla",

@@ -22,6 +22,8 @@
             CFG_BIND         = "Bindung",
             CFG_CATEGORY     = "Kategorie",
             CFG_CLEAR        = "Leeren",
+            CFG_CLEARCONFIRM = "Alle |cffffff00%d|r Eintraege aus dieser Liste entfernen?",
+            CFG_CLEARTIP     = "Leert die ganze Liste. Einzelne Eintraege entfernt das rote x in der Zeile.",
             CFG_DELETE       = "Loeschen",
             CFG_DROPHERE     = "Item hierher ziehen oder Link/ID einfuegen",
             CFG_EDIT         = "Regel bearbeiten",

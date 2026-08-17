@@ -246,6 +246,23 @@ end
 
 local activeDropEditBox
 
+-- Emptying a list is destructive and its button sits right next to the
+-- add field, where "Clear" reads as "clear that field". Ask first, and
+-- say how many entries are at stake.
+StaticPopupDialogs["WARBRANDFASTMAIL_CLEARLIST"] = {
+    text           = "%s",
+    button1        = YES or "Yes",
+    button2        = NO or "No",
+    timeout        = 30,
+    whileDead      = false,
+    hideOnEscape   = true,
+    showAlert      = true,
+    preferredIndex = 3,
+    OnAccept = function(_, data)
+        if data and type(data.run) == "function" then data.run() end
+    end,
+}
+
 function W.ItemScopeList(parent, width, height, opts)
     local counted = opts.counted and true or false
     -- Unscoped mode: no per-character table, no scope column. Used for
@@ -456,17 +473,40 @@ function W.ItemScopeList(parent, width, height, opts)
     box.editBox:SetScript("OnEditFocusLost", function(self)
         if activeDropEditBox == self then activeDropEditBox = nil end
     end)
+    -- The hint label sits next to the list, not next to this box, so the
+    -- field reads like an unlabelled input right beside a Clear button.
+    box.editBox:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(L.CFG_DROPHERE, 1, 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    box.editBox:SetScript("OnLeave", GameTooltip_Hide)
 
     box.clearButton = W.Button(parent, 60, L.CFG_CLEAR, function()
         local g, c = Tables()
         local t = (scoped and opts.getNewScope() == "char") and c or g
-        for k in pairs(t) do t[k] = nil end
-        box:Refresh()
-        if opts.onChange then opts.onChange() end
+        local n = 0
+        for _ in pairs(t) do n = n + 1 end
+        if n == 0 then return end
+
+        local dlg = StaticPopup_Show("WARBRANDFASTMAIL_CLEARLIST",
+            string.format(L.CFG_CLEARCONFIRM, n))
+        if not dlg then return end
+        dlg.data = { run = function()
+            for k in pairs(t) do t[k] = nil end
+            box:Refresh()
+            if opts.onChange then opts.onChange() end
+        end }
     end)
     box.clearButton:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(L.SCOPE_CLEARTIP, 1, 1, 1, 1, true)
+        GameTooltip:SetText(L.CFG_CLEAR, 1, 1, 1)
+        GameTooltip:AddLine(L.CFG_CLEARTIP, nil, nil, nil, true)
+        -- Only the hold list has a scope selector; the per-rule list does
+        -- not, and claiming otherwise there was simply wrong.
+        if scoped then
+            GameTooltip:AddLine(L.SCOPE_CLEARTIP, nil, nil, nil, true)
+        end
         GameTooltip:Show()
     end)
     box.clearButton:SetScript("OnLeave", GameTooltip_Hide)
