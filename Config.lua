@@ -488,7 +488,7 @@ local function BuildHoldWindow()
 end
 
 local function BuildSettingsWindow()
-    local f = W.Window(ADDON .. "Settings", 440, 556, L.SET_TITLE, ns.db.ui, "settingsPoint")
+    local f = W.Window(ADDON .. "Settings", 440, 476, L.SET_TITLE, ns.db.ui, "settingsPoint")
     local s = {}
     f.s = s
 
@@ -499,20 +499,15 @@ local function BuildSettingsWindow()
     s.secChar = W.Label(f, "", "GameFontNormalSmall")
     s.secChar:SetPoint("TOPLEFT", 14, -58)
 
-    local cItemLbl = W.Label(f, L.SET_ITEMRCPT)
-    cItemLbl:SetPoint("TOPLEFT", 22, -76)
-    s.charTarget = W.EditBox(f, 392, 48)
-    s.charTarget:SetPoint("TOPLEFT", 26, -90)
-
     local cGoldLbl = W.Label(f, L.SET_GOLDRCPT)
-    cGoldLbl:SetPoint("TOPLEFT", 22, -116)
+    cGoldLbl:SetPoint("TOPLEFT", 22, -76)
     s.charGold = W.EditBox(f, 392, 48)
-    s.charGold:SetPoint("TOPLEFT", 26, -130)
+    s.charGold:SetPoint("TOPLEFT", 26, -90)
 
     local cResLbl = W.Label(f, L.SET_RESERVE)
-    cResLbl:SetPoint("TOPLEFT", 22, -156)
+    cResLbl:SetPoint("TOPLEFT", 22, -116)
     s.charReserve = W.EditBox(f, 110, 12)
-    s.charReserve:SetPoint("TOPLEFT", 26, -170)
+    s.charReserve:SetPoint("TOPLEFT", 26, -130)
     s.charReserve:SetNumeric(true)
 
     local cResHint = W.Label(f, L.SET_INHERIT, "GameFontDisableSmall")
@@ -520,48 +515,43 @@ local function BuildSettingsWindow()
 
     -- ---------- section: all characters ----------
     local secGlobal = W.Label(f, L.SET_SEC_GLOBAL, "GameFontNormalSmall")
-    secGlobal:SetPoint("TOPLEFT", 14, -200)
-
-    local gItemLbl = W.Label(f, L.SET_ITEMRCPT)
-    gItemLbl:SetPoint("TOPLEFT", 22, -218)
-    s.globalTarget = W.EditBox(f, 392, 48)
-    s.globalTarget:SetPoint("TOPLEFT", 26, -232)
+    secGlobal:SetPoint("TOPLEFT", 14, -160)
 
     local gGoldLbl = W.Label(f, L.SET_GOLDRCPT)
-    gGoldLbl:SetPoint("TOPLEFT", 22, -258)
+    gGoldLbl:SetPoint("TOPLEFT", 22, -178)
     s.globalGold = W.EditBox(f, 392, 48)
-    s.globalGold:SetPoint("TOPLEFT", 26, -272)
+    s.globalGold:SetPoint("TOPLEFT", 26, -192)
 
     local gResLbl = W.Label(f, L.SET_RESERVE)
-    gResLbl:SetPoint("TOPLEFT", 22, -298)
+    gResLbl:SetPoint("TOPLEFT", 22, -218)
     s.reserve = W.EditBox(f, 110, 12)
-    s.reserve:SetPoint("TOPLEFT", 26, -312)
+    s.reserve:SetPoint("TOPLEFT", 26, -232)
     s.reserve:SetNumeric(true)
 
     local resHint = W.Label(f, L.SET_RESERVEHINT, "GameFontDisableSmall")
     resHint:SetPoint("LEFT", s.reserve, "RIGHT", 10, 0)
 
     s.sendable = W.Label(f, "")
-    s.sendable:SetPoint("TOPLEFT", 26, -336)
+    s.sendable:SetPoint("TOPLEFT", 26, -256)
 
     s.goldConfirm = W.CheckBox(f, L.SET_GOLDCONFIRM)
-    s.goldConfirm:SetPoint("TOPLEFT", 20, -356)
+    s.goldConfirm:SetPoint("TOPLEFT", 20, -276)
 
     s.confirm = W.CheckBox(f, L.SET_CONFIRM)
-    s.confirm:SetPoint("TOPLEFT", 20, -380)
+    s.confirm:SetPoint("TOPLEFT", 20, -300)
 
     s.unbound = W.CheckBox(f, L.UI_UNBOUND)
-    s.unbound:SetPoint("TOPLEFT", 20, -404)
+    s.unbound:SetPoint("TOPLEFT", 20, -324)
     s.unbound.Text:SetWidth(390)
 
     local subLbl = W.Label(f, L.SET_SUBJECT)
-    subLbl:SetPoint("TOPLEFT", 22, -434)
+    subLbl:SetPoint("TOPLEFT", 22, -354)
     s.subject = W.EditBox(f, 392, 64)
-    s.subject:SetPoint("TOPLEFT", 26, -448)
+    s.subject:SetPoint("TOPLEFT", 26, -368)
 
     -- ---------- effective values ----------
     s.effective = W.Label(f, "", "GameFontDisableSmall")
-    s.effective:SetPoint("TOPLEFT", 16, -476)
+    s.effective:SetPoint("TOPLEFT", 16, -396)
     s.effective:SetWidth(408)
 
     s.apply = W.Button(f, 140, L.CFG_APPLY, function()
@@ -569,10 +559,8 @@ local function BuildSettingsWindow()
         -- in one box cannot leave the rest half-applied.
         local pending = {}
         local fields = {
-            { box = s.charTarget,   allowSelf = false, key = "charTarget"   },
-            { box = s.charGold,     allowSelf = false, key = "charGold"     },
-            { box = s.globalTarget, allowSelf = true,  key = "globalTarget" },
-            { box = s.globalGold,   allowSelf = true,  key = "globalGold"   },
+            { box = s.charGold,   allowSelf = false, key = "charGold"   },
+            { box = s.globalGold, allowSelf = true,  key = "globalGold" },
         }
         for _, fld in ipairs(fields) do
             local value, err = ns.CheckRecipient(fld.box:GetText(), fld.allowSelf)
@@ -594,10 +582,8 @@ local function BuildSettingsWindow()
             if not charReserve then return Util.Print(L.SET_BADRESERVE, charReserveText) end
         end
 
-        ns.charDB.target        = pending.charTarget
         ns.charDB.goldRecipient = pending.charGold
         ns.charDB.goldReserve   = charReserve
-        ns.db.target            = pending.globalTarget
         ns.db.gold.recipient    = pending.globalGold
         ns.db.gold.reserve      = globalReserve
 
@@ -627,10 +613,8 @@ function Config:RefreshSettings()
     local function Fill(box, value)
         if not box:HasFocus() then box:SetText(value or "") end
     end
-    Fill(s.charTarget,   ns.charDB.target)
-    Fill(s.charGold,     ns.charDB.goldRecipient)
-    Fill(s.globalTarget, ns.db.target)
-    Fill(s.globalGold,   ns.db.gold.recipient)
+    Fill(s.charGold,   ns.charDB.goldRecipient)
+    Fill(s.globalGold, ns.db.gold.recipient)
     Fill(s.subject,      ns.db.subject)
     if not s.reserve:HasFocus() then
         s.reserve:SetText(tostring(Util.CopperToGold(ns.db.gold.reserve)))

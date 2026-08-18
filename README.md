@@ -20,7 +20,7 @@ Gold works the same way: everything **above a reserve you set** goes to a fixed 
 - **Multiple recipients per run** — the plan is computed once and mailed in 12-item batches, up to a hard cap of 25 mails
 - **Two scopes everywhere** — rules, hold list and both default recipients exist account-wide and per character, the character value beating the account one
 - **Hold list with quantities** — an empty amount means *never send*, `20` means *keep 20 and send the rest*, including partial-stack splitting
-- **Self-lock** — when the winning rule points at the character you are on, the item stays put and evaluation stops, so a collector character needs no counter-rule
+- **Self-lock** — when a rule names the character you are on, the item stays put, even if that rule is scoped to somebody else, so a delivery is never mailed straight back out
 - **Gold transfer with reserve** — sends everything above the reserve, postage deducted on top so the reserve stays exact
 - **Categories from the auction house** — the category dropdown is derived from Blizzard's own browse tree, localized and always current, instead of the dead entries in `Enum.ItemClass`
 - **Five languages** — German, English, Spanish (ES/MX), French, Italian, picked from the client locale
@@ -115,7 +115,7 @@ Rules can be disabled individually and reordered with `^` / `v` — order decide
 
 ### Self-lock
 
-When the **winning** rule points at the character currently logged in, the item stays put and evaluation stops. A single account-wide rule is therefore enough:
+When a rule points at the character currently logged in, the item stays put and evaluation stops. A single account-wide rule is therefore enough:
 
 | Logged in as | Pet charm | Source |
 |---|---|---|
@@ -124,6 +124,16 @@ When the **winning** rule points at the character currently logged in, the item 
 | **Collector** | **stays put** | self-lock |
 
 The stop matters: falling through to the next rule could let a broader rule mail the items straight back out again.
+
+**Scope does not weaken this.** A rule that names this character holds its delivery even when the rule itself does not fire here — for example a rule scoped to *another* character:
+
+| | |
+|---|---|
+| Rule, scoped to **Bankchar** | armor → **Collector** |
+| Logged in as Bankchar | armor → Collector, the rule fires |
+| Logged in as **Collector** | **armor stays put**, although the rule is inert here |
+
+Without that, the rule would be invisible on Collector, the armor it had just delivered would fall through to the default recipient, and the next run would mail it straight back.
 
 ## Hold list
 

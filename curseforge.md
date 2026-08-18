@@ -18,7 +18,7 @@ Gold works the same way: everything **above a reserve you set** goes to a fixed 
 - **Many recipients per run** — the plan is computed once and mailed in 12-item batches, up to a hard cap of 25 mails
 - **Two scopes everywhere** — rules, hold list and both default recipients exist account-wide *and* per character, the character value winning
 - **Hold list with quantities** — empty means *never send*, `20` means *keep 20 and send the rest*, including splitting a partial stack
-- **Self-lock** — when the winning rule points at the character you are on, the item stays put. One account-wide rule "pet charms → Collector" sends on every character and is simply inert on Collector itself, so no counter-rule is needed
+- **Self-lock** — when a rule names the character you are on, the item stays put. One rule "pet charms → Collector" sends on every character and is inert on Collector itself, so no counter-rule is needed — and a delivery is never mailed back out, whichever character the rule belongs to
 - **Gold with a reserve** — postage is deducted on top of the reserve, so the reserve is left exact
 - **Categories from the auction house** — the category dropdown is built from Blizzard's own browse tree, localized and always current
 - **Five languages** — German, English, Spanish (ES/MX), French, Italian, picked from your client

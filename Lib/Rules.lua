@@ -104,13 +104,16 @@ end
 
 -- --- Matching ----------------------------------------------
 
+---Criteria only: does this rule describe this item? Deliberately says
+---nothing about whether the rule is in force on the logged-in character.
+---The two are separate because a rule naming this character still means
+---"the item belongs here" on characters where the rule itself never fires.
 ---@param rule table
 ---@param e table  entry from Scanner
 ---@return boolean
-function Rules.Match(rule, e)
+function Rules.Describes(rule, e)
     if not rule or rule.enabled == false then return false end
     if type(rule.recipient) ~= "string" or rule.recipient == "" then return false end
-    if not Rules.AppliesHere(rule) then return false end
 
     -- explicit item list short-circuits every other criterion
     if Rules.HasItems(rule) then
@@ -169,10 +172,14 @@ function Rules.Resolve(e)
 
     for i = 1, #ns.db.rules do
         local rule = ns.db.rules[i]
-        if Rules.Match(rule, e) then
-            -- the winning rule points here: the item has arrived
+        if Rules.Describes(rule, e) then
+            -- A rule naming this character means the item has arrived, and
+            -- that is true whether or not the rule fires here. Asking only
+            -- rules in force was the bug: a rule owned by another character
+            -- did not match at all, so the delivery it had just made fell
+            -- through to the default recipient and was mailed right back.
             if Util.IsSelf(rule.recipient) then return nil, "self", i end
-            return rule.recipient, "rule", i
+            if Rules.AppliesHere(rule) then return rule.recipient, "rule", i end
         end
     end
 
