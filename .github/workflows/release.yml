@@ -37,3 +37,8 @@ jobs:
         with:
           # pandoc is only needed for WoWInterface uploads
           pandoc: false
+          # -p passes the CurseForge project id explicitly. The TOC carries
+          # it too, but the upload is guarded by a numeric test on the id
+          # and the run of v12.1.0.3 packaged happily while never attempting
+          # an upload, so this removes the doubt about which source counts.
+          args: -p 1655846
