@@ -219,6 +219,29 @@ The value is not decoration: on load the add-on compares it against `select(4, G
 
 A pure patch bump is not an error, just a hint to update the `## Interface:` line. A branch change means: check the API.
 
+## Releasing
+
+Tagging is the whole process. [`release.yml`](.github/workflows/release.yml) runs [BigWigs' packager](https://github.com/BigWigsMods/packager) on any `v*` tag, builds the zip according to [`.pkgmeta`](.pkgmeta) and uploads it to CurseForge:
+
+```bash
+git tag v12.1.0.2 && git push origin v12.1.0.2
+```
+
+The tag name decides the release type: a tag containing `alpha` or `beta` is uploaded as such, anything else as a full release. Keep the tag and `## Version:` in the `.toc` in step — nothing checks that for you.
+
+Two things have to exist once, and both can only be created by the project owner:
+
+| What | Where |
+|---|---|
+| `## X-Curse-Project-ID: <id>` in the `.toc` | the id sits in the *About Project* box on the CurseForge page; the line is already there, commented out |
+| Repository secret `CF_API_TOKEN` | generate at [curseforge.com/account/api-tokens](https://www.curseforge.com/account/api-tokens), then add it under *Settings → Secrets and variables → Actions* |
+
+Until both exist the workflow still runs and still builds the zip — it only skips the upload. It is therefore safe to have in place beforehand.
+
+`.pkgmeta` keeps `tools/`, `screenshots/`, `logo.png` and `curseforge.md` out of the package. `curseforge.md` is the text for the project page itself, not something to ship to players.
+
+GitHub releases stay manual. Adding `GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}` to the workflow's `env:` block, plus `contents: write` under `permissions:`, hands those to the packager as well.
+
 ## Languages
 
 `DE`, `EN`, `FR`, `ES` (ES/MX), `IT`. The strings live as XML in `lang\`:
