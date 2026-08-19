@@ -9,7 +9,9 @@ on:
       - 'v*'
 
 permissions:
-  contents: read
+  # write, because the packager creates the GitHub release for the tag
+  # and attaches the zip to it
+  contents: write
 
 jobs:
   package:
@@ -40,6 +42,11 @@ jobs:
           # a word. Feeding both survives a later bump to master too.
           CF_API_KEY: ${{ secrets.CF_API_TOKEN }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          # Same version split as above: @v2 reads GITHUB_OAUTH, master
+          # reads GITHUB_API_TOKEN. GITHUB_TOKEN is issued by Actions
+          # itself, so there is nothing to create for this one.
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # pandoc is only needed for WoWInterface uploads
           pandoc: false
