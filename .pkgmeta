@@ -16,4 +16,5 @@ ignore:
   - screenshots    # project page material
   - curseforge.md  # project page text, not addon content
   - logo.png       # 2 MB, has no business in the addon folder
+  - logo_klein.png # project page artwork, same reason
   - .github
