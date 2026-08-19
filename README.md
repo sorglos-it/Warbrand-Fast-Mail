@@ -224,8 +224,11 @@ A pure patch bump is not an error, just a hint to update the `## Interface:` lin
 Tagging is the whole process. [`release.yml`](.github/workflows/release.yml) runs [BigWigs' packager](https://github.com/BigWigsMods/packager) on any `v*` tag, builds the zip according to [`.pkgmeta`](.pkgmeta) and uploads it to CurseForge:
 
 ```bash
-git tag v12.1.0.2 && git push origin v12.1.0.2
+git tag v12.1.0.3
+git push origin v12.1.0.3
 ```
+
+Two separate lines on purpose: `&&` is not a statement separator in Windows PowerShell 5.1, and this form runs unchanged in bash, PowerShell 5.1 and PowerShell 7.
 
 The tag name decides the release type: a tag containing `alpha` or `beta` is uploaded as such, anything else as a full release. Keep the tag and `## Version:` in the `.toc` in step — nothing checks that for you.
 
