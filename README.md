@@ -201,7 +201,7 @@ Equipped "warbound until equipped" pieces are soulbound and already drop out at 
 ## Versioning
 
 ```
-12 . 1 . 0 . 3
+12 . 1 . 0 . 4
 └──┬──┘   │   └── addon build counter
    │      └────── WoW patch
    └───────────── WoW version this copy was built for
