@@ -1,20 +1,28 @@
 # Controls what ends up in the uploaded zip. Read by BigWigs' packager and
-# by CurseForge's own packaging service, so it works for either route.
+# by CurseForge's own packaging service, so it serves either route.
+#
+# Do not put comments after a value. This file is parsed with shell tools,
+# not a YAML parser, so "- tools  # why" makes it look for a path literally
+# called "tools  # why" -- the entry then silently does nothing and the
+# files ship anyway. Keep the lists bare.
+#
+# What is excluded and why:
+#   tools           build_lang.py, a generator that is never loaded in game
+#   screenshots     project page material
+#   curseforge.md   project page text, not addon content
+#   logo.png        2 MB, and logo_klein.png 240 KB, artwork not code
 
 package-as: Warbrand-Fast-Mail
 
-# No embedded libraries, so there is nothing to strip for a "nolib" build.
 enable-nolib-creation: no
-
-# The TOC is hand-maintained; do not generate per-flavour ones.
 enable-toc-creation: no
 
 license-output: LICENSE
 
 ignore:
-  - tools          # build_lang.py, not loaded in game
-  - screenshots    # project page material
-  - curseforge.md  # project page text, not addon content
-  - logo.png       # 2 MB, has no business in the addon folder
-  - logo_klein.png # project page artwork, same reason
+  - tools
+  - screenshots
+  - curseforge.md
+  - logo.png
+  - logo_klein.png
   - .github
