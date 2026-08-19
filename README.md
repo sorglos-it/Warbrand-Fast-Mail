@@ -233,7 +233,7 @@ Two things have to exist once, and both can only be created by the project owner
 
 | What | Where |
 |---|---|
-| `## X-Curse-Project-ID: <id>` in the `.toc` | the id sits in the *About Project* box on the CurseForge page; the line is already there, commented out |
+| ~~`## X-Curse-Project-ID` in the `.toc`~~ | done — project `1655846` |
 | Repository secret `CF_API_TOKEN` | generate at [curseforge.com/account/api-tokens](https://www.curseforge.com/account/api-tokens), then add it under *Settings → Secrets and variables → Actions* |
 
 Until both exist the workflow still runs and still builds the zip — it only skips the upload. It is therefore safe to have in place beforehand.

@@ -7,9 +7,7 @@
 ## Version: 12.1.0.2
 ## X-License: MIT
 ## X-Website: https://github.com/sorglos-it/Warbrand-Fast-Mail
-# Uncomment with the id from the CurseForge page ("About Project" box).
-# Without it the release workflow builds the zip but skips the upload.
-# ## X-Curse-Project-ID: 000000
+## X-Curse-Project-ID: 1655846
 ## IconTexture: Interface\Icons\INV_Letter_15
 ## SavedVariables: WarbrandFastMailDB
 ## SavedVariablesPerCharacter: WarbrandFastMailCharDB
