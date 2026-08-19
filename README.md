@@ -237,7 +237,7 @@ Two things have to exist once, and both can only be created by the project owner
 | What | Where |
 |---|---|
 | ~~`## X-Curse-Project-ID` in the `.toc`~~ | done — project `1655846` |
-| Repository secret `CF_API_TOKEN` | generate at [curseforge.com/account/api-tokens](https://www.curseforge.com/account/api-tokens), then add it under *Settings → Secrets and variables → Actions* |
+| ~~`CF_API_TOKEN`~~ | done — kept as an *environment* secret under the `curseforge` environment, which is why the job declares `environment: curseforge`. A job cannot see environment secrets without naming the environment. |
 
 Until both exist the workflow still runs and still builds the zip — it only skips the upload. It is therefore safe to have in place beforehand.
 

@@ -14,6 +14,11 @@ permissions:
 jobs:
   package:
     runs-on: ubuntu-latest
+    # CF_API_TOKEN lives in this environment rather than in the repository
+    # secrets. A job only sees environment secrets if it asks for the
+    # environment by name -- without this line the token resolves to an
+    # empty string and the upload is skipped without any error.
+    environment: curseforge
     steps:
       - name: Check out
         uses: actions/checkout@v4
