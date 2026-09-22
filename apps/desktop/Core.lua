@@ -271,7 +271,7 @@ handlers["hold"] = function(rest)
 
     if amountPart == "" then
         local v = ns.Hold.Get(itemID)
-        if v == nil then return Util.Print(L.HOLD_CLEARED, Util.ItemLink(itemID)) end
+        if v == nil then return Util.Print(L.CHECK_NONE, Util.ItemLink(itemID)) end
         return Util.Print(L.HOLD_SET,
             (v == true) and L.HOLD_ALL or tostring(v), Util.ItemLink(itemID))
     end

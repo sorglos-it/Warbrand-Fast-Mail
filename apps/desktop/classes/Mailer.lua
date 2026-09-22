@@ -7,6 +7,7 @@
 --   * never runs without an open mailbox
 --   * hard cap on mails per run
 --   * postage checked before every SendMail
+--   * recipient name re-checked before every SendMail, as for gold
 --   * COD and attached money forced to zero
 --   * items that refuse to attach are skipped after 3 tries
 --   * partial stacks are handled by parking the remainder in a free
@@ -273,6 +274,15 @@ function Mailer:Dispatch()
     local subject = ns.db.subject
     if type(subject) ~= "string" or subject == "" then subject = Util.DEFAULT_SUBJECT end
     local body = type(ns.db.body) == "string" and ns.db.body or ""
+
+    -- Re-check the name before every mail, the same check the gold
+    -- transfer runs before it sends: whitelist and self guard, and what
+    -- goes out must be exactly the name that passed.
+    local verified = Util.NormalizeRecipient(S.recipient)
+    if verified and Util.IsSelf(verified) then return self:Abort(L.NO_SELF) end
+    if not verified or verified ~= S.recipient then
+        return self:Abort(string.format(L.BAD_NAME, tostring(S.recipient)))
+    end
 
     if SendMailNameEditBox    then SendMailNameEditBox:SetText(S.recipient) end
     if SendMailSubjectEditBox then SendMailSubjectEditBox:SetText(subject) end

@@ -2,6 +2,15 @@
 
 ## Unreleased – 2026-09-22
 
+### Fixed
+
+- `/wfm hold <itemID>` for an item without an entry said it had been removed from the hold list; it now says the
+  item is not on the hold list.
+- The recipient of every item mail is checked again right before it is sent, as the gold recipient already was. A
+  name that fails stops the run.
+
+### Repository
+
 Nothing changes in the game: the add-on loads the same code in the same order.
 
 - The repository follows the project layout: the add-on lives in `apps/desktop/` with `classes/`, `views/` and

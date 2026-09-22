@@ -166,7 +166,7 @@ nothing is left, the button stays disabled. Default reserve: **100 gold**.
 Mailing automatically is only acceptable if it cannot go wrong quietly:
 
 - Recipient names pass a strict whitelist (no `|` escapes, control characters, quotes or backslashes) when they are
-  entered; the gold recipient is checked again before every gold mail
+  entered and again before every mail, item mails and gold alike; a name that fails stops the run
 - Sending to yourself is refused
 - Confirmation dialog with the full plan (can be switched off)
 - At most 25 mails per run; postage is checked against your money before every mail

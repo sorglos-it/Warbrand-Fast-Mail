@@ -89,7 +89,7 @@ The amount is a floor on the bag count, not a running counter, so an interrupted
 
 Sending mail automatically is only acceptable if it cannot go wrong quietly:
 
-- Recipient names pass a strict whitelist that blocks `|` escapes, control characters, quotes and backslashes — whenever a name is entered, and the gold recipient again before every transfer
+- Recipient names pass a strict whitelist that blocks `|` escapes, control characters, quotes and backslashes — whenever a name is entered, and again before every mail, item mails and gold transfers alike
 - Sending to yourself is refused
 - Hard cap of 25 mails per run, postage checked before every mail
 - COD forced to zero on item mails, and money only when you choose *Items + gold* — never gold by accident, never cash on delivery
