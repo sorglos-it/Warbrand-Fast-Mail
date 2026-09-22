@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Categories.lua
+-- Warbrand-Fast-Mail / classes/Categories.lua
 -- Category and subcategory lists for the rule editor.
 --
 -- Enum.ItemClass still carries long-dead entries (Projectile,

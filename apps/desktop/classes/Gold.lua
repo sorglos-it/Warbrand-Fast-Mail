@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Gold.lua
+-- Warbrand-Fast-Mail / classes/Gold.lua
 -- Sends everything above a configurable reserve to one fixed
 -- character.
 --

@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Locale.lua
+-- Warbrand-Fast-Mail / classes/Locale.lua
 -- Localization registry.
 --
 -- The actual strings live in lang\*.xml. The TOC loads

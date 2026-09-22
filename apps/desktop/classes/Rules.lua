@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Rules.lua
+-- Warbrand-Fast-Mail / classes/Rules.lua
 -- Routing engine. Pure logic, no UI, no game state beyond ns.db.
 --
 -- Rule schema (all fields optional except recipient):

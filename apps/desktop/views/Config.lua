@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Config.lua
+-- Warbrand-Fast-Mail / views/Config.lua
 -- Rule manager and ignore list.
 -- ============================================================
 local ADDON, ns = ...

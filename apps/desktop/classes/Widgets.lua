@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Widgets.lua
+-- Warbrand-Fast-Mail / classes/Widgets.lua
 -- Small, self-contained widget toolkit.
 -- Deliberately avoids UIDropDownMenu / FauxScrollFrame and the
 -- newer MenuUtil API, so nothing breaks when Blizzard reworks

@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / UI.lua
+-- Warbrand-Fast-Mail / views/UI.lua
 -- Panel next to the mailbox.
 --
 -- Visibility is driven by MailFrame:HookScript("OnShow"/"OnHide"),

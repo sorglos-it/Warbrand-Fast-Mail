@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Util.lua
+-- Warbrand-Fast-Mail / classes/Util.lua
 -- Central helper library. No game state, no side effects.
 -- Every public function validates its own input.
 -- ============================================================

@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Mailer.lua
+-- Warbrand-Fast-Mail / classes/Mailer.lua
 -- Event-driven state machine, one recipient at a time:
 --   attach (max 12) -> dispatch -> repeat -> next recipient
 --

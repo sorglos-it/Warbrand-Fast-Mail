@@ -40,7 +40,7 @@ end
 -- --- Defaults ----------------------------------------------
 
 local DEFAULTS = {
-    rules          = {},     -- ordered list, see Lib/Rules.lua
+    rules          = {},     -- ordered list, see classes/Rules.lua
     hold           = {},     -- [itemID] = true (never send) | n (keep n)
     target         = "",     -- account-wide default recipient for items
     includeUnbound = false,  -- implicit default rule also takes BoE

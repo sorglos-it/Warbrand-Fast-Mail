@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Scanner.lua
+-- Warbrand-Fast-Mail / classes/Scanner.lua
 -- Classifies every bag slot as "warbound" / "unbound" / "soulbound"
 -- and returns the metadata the rule engine needs.
 --
@@ -11,7 +11,7 @@
 --   3. Tooltip scan against Blizzard's own localized GlobalStrings
 --
 -- Entries also carry sendQty: how many pieces of that stack may
--- leave the bags after Lib/Hold.lua has taken its reserve.
+-- leave the bags after classes/Hold.lua has taken its reserve.
 --
 -- The reserve is a budget per ITEM, not per stack, so it is spent
 -- down across one scan pass: with 810 bandages and "keep 5" spread

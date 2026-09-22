@@ -1,5 +1,5 @@
 -- ============================================================
--- Warbrand-Fast-Mail / Lib/Hold.lua
+-- Warbrand-Fast-Mail / classes/Hold.lua
 -- One list for "never send" and "keep n, send the rest".
 --
 -- Value semantics per itemID:
