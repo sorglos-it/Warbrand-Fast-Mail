@@ -257,7 +257,7 @@ is skipped silently.
 
 ## License
 
-MIT © 2026 Thomas Weirich — see [LICENSE](LICENSE).
+MIT © 2026 Sorglos Thomas Weirich — see [LICENSE](LICENSE).
 
 ## Donate via PayPal
 

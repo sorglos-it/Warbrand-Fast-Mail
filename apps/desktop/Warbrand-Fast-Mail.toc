@@ -3,7 +3,7 @@
 ## Title-deDE: Warbrand|cff33ff99-Fast-Mail|r
 ## Notes: Routes warbound items to recipients by rule, mails them and transfers gold.
 ## Notes-deDE: Verteilt kriegsmeutengebundene Gegenstaende regelbasiert per Post und ueberweist Gold.
-## Author: Thomas Weirich
+## Author: Sorglos Thomas Weirich
 ## Version: 12.1.0.5
 ## X-License: MIT
 ## X-Website: https://github.com/sorglos-it/Warbrand-Fast-Mail
