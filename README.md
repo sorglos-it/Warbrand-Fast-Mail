@@ -9,7 +9,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-00457C.svg?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=6CDEVZGJWTNQQ)
 
 A World of Warcraft add-on that **empties your bags into the mailbox by rule**. Open a mailbox and a panel next to
-it shows where every item will go — "7 × Bankchar", "3 × Muli", "5 without recipient", "2 held" — and one button
+it shows where every item will go — "7 x Bankchar", "3 x Muli", "5 without a recipient", "2 stay here" — and one button
 sends them. Warbound and unbound (BoE) items only, soulbound gear is never touched; gold above a reserve can go along.
 
 | Folder | Purpose | Language | Start | Build |
@@ -22,16 +22,17 @@ sends them. Warbound and unbound (BoE) items only, soulbound gear is never touch
    [Installing from the zip](#installing-from-the-zip).
 2. **Open it in game:** start the game (restart it if it was running) and open any mailbox — the panel appears to the
    right of it. The entry in the AddOn Compartment (the icon next to the minimap) opens the rules window.
-3. **First rule:** set where everything goes by default with `/wfm target <name>` (this character) or
+3. **First rule:** set where warbound items go by default with `/wfm target <name>` (this character) or
    `/wfm target global <name>` (all characters). Add rules for anything that should go elsewhere with `/wfm rules`,
    then press **Send** on the panel. A confirmation with the full plan comes first; `/wfm confirm` switches it off.
 
 ## Features
 
-- **Rules** — a top-down list, the first matching rule wins; anything unmatched goes to the default recipient
+- **Rules** — a top-down list, the first matching rule wins; unmatched warbound items go to the default recipient,
+  unbound (BoE) ones only if you switch that on
 - **Many recipients per run** — the plan is computed once and mailed in batches of 12 items, at most 25 mails per run
 - **Two scopes everywhere** — rules, hold list, reserve and both default recipients exist account-wide and per
-  character; the character value wins
+  character; the character value wins, except for rules, where the order in the list decides
 - **Hold list with amounts** — empty means *never send*, `20` means *keep 20 and send the rest*, splitting a stack if
   needed
 - **Self-lock** — when a rule names the character you are on, the item stays put, so a delivery is never mailed
@@ -84,7 +85,7 @@ recipient, reserve, own hold list).
 |---|---|
 | `/wfm send` | Run all rules (mailbox open) |
 | `/wfm sendall` | Items and gold in one run — the gold rides on the last mail to its recipient, one postage less |
-| `/wfm force <name>` | Ignore the rules, send everything to one recipient |
+| `/wfm force <name>` | Ignore the rules, send everything to one recipient — hold list and `/wfm unbound` still apply |
 | `/wfm target <name>` | Default recipient, this character (`target global <name>`: all characters) |
 | `/wfm gold` | Send gold minus the reserve |
 | `/wfm goldtarget <name>` | Gold recipient, this character (`goldtarget global <name>`: all characters) |
@@ -106,7 +107,8 @@ recipient, reserve, own hold list).
 
 ## Rules
 
-Rules are checked top to bottom and **the first match wins**. Whatever matches nothing goes to the default recipient.
+Rules are checked top to bottom and **the first match wins**. Whatever matches nothing goes to the default recipient —
+unbound (BoE) items only when *Default rule also takes unbound (BoE)* is ticked on the panel (`/wfm unbound`).
 
 | Field | Effect |
 |---|---|
@@ -150,10 +152,9 @@ One list with an amount column covers "never send" and "keep some":
 | `20` | 20 stay, the rest goes out |
 
 New entries start empty — the safe reading when you drag an item onto a hold list. The amount is a floor for your
-bags, not a running counter: before every attachment the add-on counts the bags again and lets only what is above the
-amount go, so an interrupted or resumed run can never send too much. If a whole stack does not fit, exactly the
-allowed amount is split off: 250 potions in stacks of 100/100/50 with 20 held sends 100, 100 and a split-off 30, and
-20 stay.
+bags, not a running counter: every run counts the bags first and lets only what is above the amount go, so an
+interrupted or resumed run can never send too much. If a whole stack does not fit, it is split, which needs one free
+bag slot: 250 potions in stacks of 100/100/50 with 20 held sends 100, 100 and 30 of the last stack, and 20 stay.
 
 ## Gold
 
@@ -164,20 +165,21 @@ nothing is left, the button stays disabled. Default reserve: **100 gold**.
 
 Mailing automatically is only acceptable if it cannot go wrong quietly:
 
-- Recipient names pass a strict whitelist (no `|` escapes, control characters, quotes or backslashes) before **every**
-  send, including rules loaded from SavedVariables
+- Recipient names pass a strict whitelist (no `|` escapes, control characters, quotes or backslashes) when they are
+  entered; the gold recipient is checked again before every gold mail
 - Sending to yourself is refused
 - Confirmation dialog with the full plan (can be switched off)
 - At most 25 mails per run; postage is checked against your money before every mail
-- Item mails always carry 0 money and 0 COD — never gold by accident, never cash on delivery
+- Item mails always carry 0 COD, and money only in an *Items + gold* run — never gold by accident, never cash on delivery
 - Stops on a failed send and the moment the mailbox closes
 - The bags are rescanned before **every single** attachment, so stale slot numbers cannot happen
 - Three failed attempts per item, then it is skipped — no endless loop
-- Split stacks are checked by item ID on the cursor, and the cursor is always cleared afterwards
+- Partial stacks: the part that stays is moved to a free bag slot first, then the rest is attached as a whole
+  stack; if that fails, the item is skipped for this run and the cursor is cleared
 - Gold: the amount is recalculated right before sending, never taken from the dialog; the recipient is checked again on
   click; gold and item runs never overlap
 
-**Warbound or soulbound?** The add-on asks the game, not the tooltip text, so it works in every client language:
+**Warbound or soulbound?** The add-on checks this in a way that works in every client language:
 first whether the item may go into the warband bank (`C_Bank.IsItemAllowedInBankType` with `C_Item.IsBound`), then
 its bind type from `GetItemInfo`, and only as a last resort the tooltip against Blizzard's own localized strings.
 "Warbound until equipped" pieces that have been equipped are soulbound and stay.
@@ -234,9 +236,10 @@ table and refuses to write a file with missing or unknown keys or `%d`/`%s` plac
 needs the English and German base tables `tools/en_base.json` and `tools/de_base.json`, which are not in the
 repository yet.
 
-**Modules:** `classes/` is freely reusable. `Util` and `Widgets` have no dependencies, `Hold` needs only `Util`,
-`Scanner` needs `Util` and `Hold`. `Widgets` deliberately avoids `UIDropDownMenu`, `FauxScrollFrame` and the newer
-`MenuUtil` — Blizzard has rebuilt both generations already.
+**Modules:** `classes/` is freely reusable. `Util` has no dependencies, `Widgets` needs `Locale` and `Util` (plus
+`Hold` for the amount column of the hold list), `Hold` needs only `Util`, `Scanner` needs `Util` and `Hold`. `Widgets`
+deliberately avoids `UIDropDownMenu`, `FauxScrollFrame` and the newer `MenuUtil` — Blizzard has rebuilt both
+generations already.
 
 **Releasing:** raise `## Version:` in `apps/desktop/Warbrand-Fast-Mail.toc` and `apps/desktop/VERSION` to the same
 number, commit and push, then tag and push the tag:

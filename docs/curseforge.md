@@ -4,9 +4,9 @@
 
 **Fully translated: Deutsch · English · Español · Français · Italiano.** The add-on follows your game client — there is no language setting to find.
 
-Open a mailbox and a panel appears beside it showing exactly where every item is going — "7 × Bankchar", "3 × Muli", "5 without recipient", "2 held". One button sends them, in batches of 12, to as many different characters as your rules name.
+Open a mailbox and a panel appears beside it showing exactly where every item is going — "7 x Bankchar", "3 x Muli", "5 without a recipient", "2 stay here". One button sends them, in batches of 12, to as many different characters as your rules name.
 
-It moves **warbound** and **unbound (BoE)** items. Soulbound gear is never touched, and that is determined from the API rather than from tooltip text, so it does not depend on your client language.
+It moves **warbound** and **unbound (BoE)** items. Soulbound gear is never touched. That is decided through the game's API — the tooltip is only read as a last resort, against Blizzard's own localized strings — so it does not depend on your client language.
 
 Gold works the same way: everything **above a reserve you set** goes to a fixed character.
 
@@ -14,9 +14,9 @@ Gold works the same way: everything **above a reserve you set** goes to a fixed 
 
 ## Features
 
-- **Rule engine** — a top-down list, first matching rule wins; anything unmatched goes to the character's default recipient
+- **Rule engine** — a top-down list, first matching rule wins; unmatched warbound items go to the character's default recipient, unbound (BoE) ones only if you switch that on
 - **Many recipients per run** — the plan is computed once and mailed in 12-item batches, up to a hard cap of 25 mails
-- **Two scopes everywhere** — rules, hold list and both default recipients exist account-wide *and* per character, the character value winning
+- **Two scopes everywhere** — rules, hold list and both default recipients exist account-wide *and* per character; the character value wins, except for rules, where the order in the list decides
 - **Hold list with quantities** — empty means *never send*, `20` means *keep 20 and send the rest*, including splitting a partial stack
 - **Self-lock** — when a rule names the character you are on, the item stays put. One rule "pet charms → Collector" sends on every character and is inert on Collector itself, so no counter-rule is needed — and a delivery is never mailed back out, whichever character the rule belongs to
 - **Gold with a reserve** — postage is deducted on top of the reserve, so the reserve is left exact
@@ -43,7 +43,7 @@ Both `/warbrand-fast-mail` and `/wfm` work.
 | Command | Effect |
 |---|---|
 | `/wfm send` | Run all rules |
-| `/wfm force <name>` | Ignore rules, send everything to one recipient |
+| `/wfm force <name>` | Ignore rules, send everything to one recipient — hold list and `/wfm unbound` still apply |
 | `/wfm target [global] <name>` | Default recipient |
 | `/wfm gold` | Send gold minus the reserve |
 | `/wfm goldtarget [global] <name>` | Gold recipient |
@@ -81,7 +81,7 @@ One list covering both "never send" and "keep some":
 | Amount **empty** | never send |
 | Amount **20** | 20 stay, the rest goes out |
 
-The amount is a floor on the bag count, not a running counter, so an interrupted or resumed run can never overshoot. If a whole stack does not fit the budget, exactly the allowed amount is split off and mailed.
+The amount is a floor on the bag count, not a running counter, so an interrupted or resumed run can never overshoot. If a whole stack does not fit the budget, it is split and exactly the allowed amount is mailed; that needs one free bag slot.
 
 ---
 
@@ -89,10 +89,10 @@ The amount is a floor on the bag count, not a running counter, so an interrupted
 
 Sending mail automatically is only acceptable if it cannot go wrong quietly:
 
-- Recipient names pass a strict whitelist that blocks `|` escapes, control characters, quotes and backslashes — before **every** send, including rules loaded from saved variables
+- Recipient names pass a strict whitelist that blocks `|` escapes, control characters, quotes and backslashes — whenever a name is entered, and the gold recipient again before every transfer
 - Sending to yourself is refused
 - Hard cap of 25 mails per run, postage checked before every mail
-- COD and attached money forced to zero on item mails — never gold by accident, never cash on delivery
+- COD forced to zero on item mails, and money only when you choose *Items + gold* — never gold by accident, never cash on delivery
 - Aborts on a failed send and the moment the mailbox closes
 - Bags are rescanned and rerouted before **every single** attachment, so stale slot indices are impossible by construction
 - Three failed attempts per item, then it is skipped — no endless loop
