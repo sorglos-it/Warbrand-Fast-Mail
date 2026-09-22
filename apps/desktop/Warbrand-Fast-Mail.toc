@@ -14,17 +14,17 @@
 ## AddonCompartmentFunc: WarbrandFastMail_OnCompartmentClick
 ## DefaultState: Enabled
 
-Locale.lua
+classes\Locale.lua
 lang\enUS.xml
 lang\[TextLocale].xml
-Lib\Util.lua
-Lib\Widgets.lua
-Lib\Categories.lua
-Lib\Hold.lua
-Lib\Scanner.lua
-Lib\Rules.lua
-Lib\Mailer.lua
-Lib\Gold.lua
+classes\Util.lua
+classes\Widgets.lua
+classes\Categories.lua
+classes\Hold.lua
+classes\Scanner.lua
+classes\Rules.lua
+classes\Mailer.lua
+classes\Gold.lua
 Core.lua
-UI.lua
-Config.lua
+views\UI.lua
+views\Config.lua

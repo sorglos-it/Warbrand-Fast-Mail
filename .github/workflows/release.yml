@@ -32,15 +32,22 @@ jobs:
       # Twice a tag was pushed while the TOC still named the previous
       # version, producing a zip called v12.1.0.4 whose addon reports
       # 12.1.0.3 in game. Nothing downstream notices, so it is caught here.
+      # apps/desktop/VERSION repeats the number for the project layout and
+      # is held to the same value.
       - name: Tag and TOC version must agree
         run: |
-          toc=$(sed -n 's/^## Version: *//p' Warbrand-Fast-Mail.toc)
+          toc=$(sed -n 's/^## Version: *//p' apps/desktop/Warbrand-Fast-Mail.toc)
+          ver=$(tr -d '\r\n' < apps/desktop/VERSION)
           tag=${GITHUB_REF_NAME#v}
           if [ "$toc" != "$tag" ]; then
             echo "::error::Tag $GITHUB_REF_NAME means $tag but the TOC says $toc"
             exit 1
           fi
-          echo "Tag and TOC agree on $toc"
+          if [ "$ver" != "$toc" ]; then
+            echo "::error::apps/desktop/VERSION says $ver but the TOC says $toc"
+            exit 1
+          fi
+          echo "Tag, TOC and VERSION agree on $toc"
 
       - name: Package and upload
         uses: BigWigsMods/packager@v2

@@ -1,2 +1,25 @@
-# Build output of BigWigs' packager
+# Erzeugtes
+dist/
+bin/
+obj/
+.pio/
+Thumbs.db
+
+# Build-Ausgabe des BigWigs-Packagers
 .release/
+
+# Laufzeitdaten - Ausnahme: Firmware-Dateisystem
+apps/*/data/
+!apps/firmware*/data/
+
+# Echte Konfiguration und Secrets - nur *.example kommt ins Repo
+apps/*/config/*
+!apps/*/config/*.example
+apps/firmware*/include/config.h
+
+# Fremdcode per Paketmanager
+apps/*/vendor/
+
+# Lokale Pruefprotokolle
+receipts/
+review-receipts/

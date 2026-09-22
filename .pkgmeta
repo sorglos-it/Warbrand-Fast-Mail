@@ -1,16 +1,24 @@
-# Controls what ends up in the uploaded zip. Read by BigWigs' packager and
-# by CurseForge's own packaging service, so it serves either route.
+# Controls what ends up in the uploaded zip. Read by BigWigs' packager,
+# which .github/workflows/release.yml runs on every v* tag.
 #
 # Do not put comments after a value. This file is parsed with shell tools,
 # not a YAML parser, so "- tools  # why" makes it look for a path literally
 # called "tools  # why" -- the entry then silently does nothing and the
 # files ship anyway. Keep the lists bare.
 #
-# What is excluded and why:
-#   tools           build_lang.py, a generator that is never loaded in game
-#   screenshots     project page material
-#   curseforge.md   project page text, not addon content
-#   logo.png        2 MB, and logo_klein.png 240 KB, artwork not code
+# The add-on lives in apps/desktop. move-folders lifts its content to the
+# top of the package, so the zip still holds Warbrand-Fast-Mail/ with the
+# .toc directly inside -- the folder name WoW needs. The packager keeps the
+# package folder when the source lies inside it, and it removes the emptied
+# apps/ afterwards.
+#
+# Everything else in the repository has to be listed under ignore, or it
+# lands in the zip next to the add-on:
+#   README.md, docs, assets, tools   repository documentation and tooling
+#   CHANGELOG.md                     the packager writes its own from the commits
+#   apps/desktop/VERSION             build metadata, same value as ## Version:
+# Names starting with a dot (.github, .pkgmeta) never ship. LICENSE ships
+# on purpose.
 
 package-as: Warbrand-Fast-Mail
 
@@ -19,10 +27,13 @@ enable-toc-creation: no
 
 license-output: LICENSE
 
+move-folders:
+  Warbrand-Fast-Mail/apps/desktop: Warbrand-Fast-Mail
+
 ignore:
+  - README.md
+  - CHANGELOG.md
+  - docs
+  - assets
   - tools
-  - screenshots
-  - curseforge.md
-  - logo.png
-  - logo_klein.png
-  - .github
+  - apps/desktop/VERSION

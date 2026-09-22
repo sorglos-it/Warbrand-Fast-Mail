@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds Warbrand-Fast-Mail/lang/*.xml from one translation table.
+"""Builds apps/desktop/lang/*.xml from one translation table.
 
 Keeping every language in a single source makes gaps mechanically
 detectable: the generator refuses to write a file that is missing keys.
@@ -7,7 +7,7 @@ detectable: the generator refuses to write a file that is missing keys.
 import json, pathlib, html
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LANG = ROOT / 'lang'
+LANG = ROOT / 'apps' / 'desktop' / 'lang'
 
 en = json.loads((ROOT / 'tools' / 'en_base.json').read_text(encoding='utf-8'))
 de = json.loads((ROOT / 'tools' / 'de_base.json').read_text(encoding='utf-8'))
@@ -435,10 +435,10 @@ for code, tbl in LANGS.items():
            '    ]]></Script>\n'
            '</Ui>\n')
     (LANG / f'{code}.xml').write_text(xml, encoding='utf-8')
-    print(f"  lang/{code}.xml  {len(tbl)} Schluessel")
+    print(f"  apps/desktop/lang/{code}.xml  {len(tbl)} Schluessel")
 
 # esMX shares the Spanish file
 (LANG / 'esMX.xml').write_text(
     (LANG / 'esES.xml').read_text(encoding='utf-8').replace('"esES"', '"esMX"'), encoding='utf-8')
-print("  lang/esMX.xml  (Kopie von esES)")
+print("  apps/desktop/lang/esMX.xml  (Kopie von esES)")
 print("\nOK -", len(en), "Schluessel je Sprache, Platzhalter geprueft.")
