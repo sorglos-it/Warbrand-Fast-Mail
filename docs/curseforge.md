@@ -125,7 +125,7 @@ Playing in a language that is not on the list? Nothing breaks: the add-on falls 
 
 ## Requirements
 
-World of Warcraft **Retail**, interface `120100` (patch 12.1.0). No dependencies.
+World of Warcraft **Retail**, interface `120105` (patch 12.1.5). No dependencies.
 
 ---
 

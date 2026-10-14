@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Warbrand--Fast--Mail-F16436?logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/warbrand-fast-mail)
 [![World of Warcraft](https://img.shields.io/badge/World%20of%20Warcraft-Retail-00AEFF?logo=battledotnet&logoColor=white)](#requirements)
-[![Interface](https://img.shields.io/badge/interface-120100-0b7285.svg)](#versioning)
+[![Interface](https://img.shields.io/badge/interface-120105-0b7285.svg)](#versioning)
 [![Languages](https://img.shields.io/badge/UI-DE%20%7C%20EN%20%7C%20ES%20%7C%20FR%20%7C%20IT-4c1.svg)](#languages)
 [![Lua](https://img.shields.io/badge/Lua-5.1-2C2D72?logo=lua&logoColor=white)](#development)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-00457C.svg?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=6CDEVZGJWTNQQ)
@@ -45,7 +45,7 @@ sends them. Warbound and unbound (BoE) items only, soulbound gear is never touch
 
 ## Requirements
 
-World of Warcraft **Retail**, interface `120100` (patch 12.1.0); `120007`, `120005` and `120001` are declared as
+World of Warcraft **Retail**, interface `120105` (patch 12.1.5); `120100`, `120007`, `120005` and `120001` are declared as
 compatible too. Nothing else — no libraries, no other add-ons.
 
 ## Installing from the zip
@@ -64,7 +64,7 @@ compatible too. Nothing else — no libraries, no other add-ons.
 3. Start or restart the game. `/wfm version` shows the add-on version, the WoW version it was built for and your
    client's interface number.
 
-If the interface number differs from `120100`, the first entry of `## Interface:` and the first three digits of
+If the interface number differs from `120105`, the first entry of `## Interface:` and the first three digits of
 `## Version:` in `Warbrand-Fast-Mail.toc` are due for an update — see [Versioning](#versioning).
 
 ## Update
@@ -193,7 +193,7 @@ its bind type from `GetItemInfo`, and only as a last resort the tooltip against 
    └───────────── WoW version this copy was built for
 ```
 
-The first three numbers are the WoW version the add-on was written against — here **12.1.0** (interface `120100`);
+The first three numbers are the WoW version the add-on was written against — here **12.1.5** (interface `120105`);
 only the fourth counts add-on changes. On login the add-on compares them with the running client:
 
 | Difference | Behavior |
@@ -245,8 +245,8 @@ generations already.
 number, commit and push, then tag and push the tag:
 
 ```bash
-git tag v12.1.0.6
-git push origin v12.1.0.6
+git tag v12.1.5.1
+git push origin v12.1.5.1
 ```
 
 Two lines on purpose: `&&` does not work in Windows PowerShell 5.1, and this form runs in bash, PowerShell 5.1 and 7.

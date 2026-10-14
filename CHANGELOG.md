@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased – 2026-09-22
+## 12.1.5.0 – 2026-10-14
+
+### Changed
+
+- Built for WoW 12.1.5: `## Interface:` leads with `120105`; `120100` and the older numbers stay declared as
+  compatible.
+
 
 ### Fixed
 

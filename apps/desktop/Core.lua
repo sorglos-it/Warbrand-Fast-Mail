@@ -8,8 +8,8 @@ local L, Util, Scanner, Rules, Mailer = ns.L, ns.Util, ns.Scanner, ns.Rules, ns.
 -- --- Version -----------------------------------------------
 -- Version scheme: <wowMajor>.<wowMinor>.<wowPatch>.<build>
 -- The first three components are the WoW version this copy was written
--- for, the fourth is the addon's own counter. 12.1.0.5 = fifth build
--- for WoW 12.1.0. A stale copy is therefore detectable at runtime.
+-- for, the fourth is the addon's own counter. 12.1.5.0 = first build
+-- for WoW 12.1.5. A stale copy is therefore detectable at runtime.
 
 ns.VERSION = Util.Meta(ADDON, "Version") or "0.0.0.0"
 
