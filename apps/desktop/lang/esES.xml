@@ -4,7 +4,7 @@
     https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/FrameXML/UI.xsd">
     <!-- Warbrand-Fast-Mail language file: esES
          Generated - do not edit by hand, edit tools/build_lang.py.
-         Keys missing here fall back to lang\enUS.xml. -->
+         Keys missing here fall back to lang\Base.xml. -->
     <Script><![CDATA[
         WarbrandFastMail_RegisterLocale("esES", {
             ABORTED          = "Cancelado. %d objeto(s) ya enviados.",

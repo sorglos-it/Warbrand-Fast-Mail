@@ -207,7 +207,7 @@ A patch difference only means the `## Interface:` line wants a refresh; a branch
 ## Languages
 
 German, English, French, Spanish (ES and MX) and Italian — every window, chat message, tooltip and the slash-command
-help. The game loads `lang\enUS.xml` plus the file for its own language through the `[TextLocale]` path in the `.toc`;
+help. The game loads `lang\Base.xml` (English) plus the file for its own language through the `[TextLocale]` path in the `.toc`;
 any other language falls back to English, and a missing single text shows its key instead of an error. Category names,
 subcategories and item qualities come from the client itself. "Warbrand-Fast-Mail" is a name and stays untranslated.
 

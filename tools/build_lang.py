@@ -427,15 +427,27 @@ for code, tbl in LANGS.items():
     xml = (HEADER +
            f'    <!-- Warbrand-Fast-Mail language file: {code}\n'
            f'         Generated - do not edit by hand, edit tools/build_lang.py.\n'
-           f'         Keys missing here fall back to lang\\enUS.xml. -->\n'
+           f'         Keys missing here fall back to lang\\Base.xml. -->\n'
            '    <Script><![CDATA[\n'
            f'        WarbrandFastMail_RegisterLocale("{code}", {{\n'
            f'{body}\n'
            '        })\n'
            '    ]]></Script>\n'
            '</Ui>\n')
-    (LANG / f'{code}.xml').write_text(xml, encoding='utf-8')
-    print(f"  apps/desktop/lang/{code}.xml  {len(tbl)} Schluessel")
+    # English is the base and lives in Base.xml. On an English client
+    # [TextLocale] resolves to enUS, so enUS.xml stays an empty stub;
+    # otherwise the TOC would load the same file twice.
+    name = 'Base' if code == 'enUS' else code
+    (LANG / f'{name}.xml').write_text(xml, encoding='utf-8')
+    print(f"  apps/desktop/lang/{name}.xml  {len(tbl)} Schluessel")
+
+(LANG / 'enUS.xml').write_text(
+    HEADER +
+    '    <!-- Warbrand-Fast-Mail language file: enUS\n'
+    '         Generated - do not edit by hand, edit tools/build_lang.py.\n'
+    '         Empty on purpose: English is the base in lang\\Base.xml. -->\n'
+    '</Ui>\n', encoding='utf-8')
+print("  apps/desktop/lang/enUS.xml  (leer, Basis steht in Base.xml)")
 
 # esMX shares the Spanish file
 (LANG / 'esMX.xml').write_text(

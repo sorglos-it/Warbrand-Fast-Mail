@@ -3,7 +3,7 @@
 -- Localization registry.
 --
 -- The actual strings live in lang\*.xml. The TOC loads
---   lang\enUS.xml          (always, as the base)
+--   lang\Base.xml          (always, the English base)
 --   lang\[TextLocale].xml  (the client's locale, when shipped)
 -- using the [TextLocale] path variable, so exactly one
 -- translation is ever in memory next to the English base.
@@ -25,7 +25,7 @@ ns.L = setmetatable(strings, {
 ns.localeLoaded = nil
 
 ---Merges a language table. Later calls overwrite earlier ones, which is
----exactly the enUS-then-locale order the TOC produces.
+---exactly the base-then-locale order the TOC produces.
 ---@param code string  locale code, for diagnostics
 ---@param tbl table    [KEY] = "text"
 function _G.WarbrandFastMail_RegisterLocale(code, tbl)

@@ -15,7 +15,7 @@
 ## DefaultState: Enabled
 
 classes\Locale.lua
-lang\enUS.xml
+lang\Base.xml
 lang\[TextLocale].xml
 classes\Util.lua
 classes\Widgets.lua
