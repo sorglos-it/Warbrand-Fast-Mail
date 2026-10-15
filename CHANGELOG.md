@@ -1,5 +1,9 @@
 # Changelog
 
+## 12.1.5.1 – 2026-10-15
+
+- Fixed: no more "Duplicate File Load" warning on English clients; the English base now loads from lang\Base.xml.
+
 ## 12.1.5.0 – 2026-10-14
 
 ### Changed
