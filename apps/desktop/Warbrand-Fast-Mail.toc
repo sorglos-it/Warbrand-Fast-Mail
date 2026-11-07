@@ -1,10 +1,10 @@
-## Interface: 120105, 120100, 120007, 120005, 120001
+## Interface: 120105, 120100, 120007, 120005, 120001, 50503, 50502, 50501, 50500, 40402, 38000, 20505, 20504, 11508, 11507
 ## Title: Warbrand|cff33ff99-Fast-Mail|r
 ## Title-deDE: Warbrand|cff33ff99-Fast-Mail|r
 ## Notes: Routes warbound items to recipients by rule, mails them and transfers gold.
 ## Notes-deDE: Verteilt kriegsmeutengebundene Gegenstaende regelbasiert per Post und ueberweist Gold.
 ## Author: Sorglos Thomas Weirich
-## Version: 12.1.5.1
+## Version: 12.1.5.2
 ## X-License: MIT
 ## X-Website: https://github.com/sorglos-it/Warbrand-Fast-Mail
 ## X-Curse-Project-ID: 1655846

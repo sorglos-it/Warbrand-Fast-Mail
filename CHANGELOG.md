@@ -1,5 +1,11 @@
 # Changelog
 
+## 12.1.5.2 – 2026-11-07
+
+- Added: runs on Classic (Era/Anniversary, TBC, Wrath, Cata, MoP) besides Retail. Without the warband only non-soulbound items are mailed by the rules.
+- Fixed: open items are no longer taken for soulbound when the client cannot report the bind state.
+- Changed: the version warning only applies to Retail.
+
 ## 12.1.5.1 – 2026-10-15
 
 - Fixed: no more "Duplicate File Load" warning on English clients; the English base now loads from lang\Base.xml.

@@ -245,8 +245,8 @@ generations already.
 number, commit and push, then tag and push the tag:
 
 ```bash
-git tag v12.1.5.1
-git push origin v12.1.5.1
+git tag v12.1.5.2
+git push origin v12.1.5.2
 ```
 
 Two lines on purpose: `&&` does not work in Windows PowerShell 5.1, and this form runs in bash, PowerShell 5.1 and 7.

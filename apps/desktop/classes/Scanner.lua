@@ -80,7 +80,8 @@ local function TooltipWarbound(bag, slot)
             if BIND_TEXT[text] then warbound = true end
         end
     end
-    return warbound
+    -- "none": tooltip read, no bind line at all (Classic has no C_Item.IsBound to ask)
+    return warbound or "none"
 end
 
 -- --- Bind state --------------------------------------------
@@ -123,6 +124,7 @@ function Scanner.BindState(bag, slot, link)
     if t == true then return Scanner.WARBOUND end
     if t == false and bound ~= false then return Scanner.SOULBOUND end
     if bound == false then return Scanner.UNBOUND end
+    if t == "none" and bound == nil then return Scanner.UNBOUND end
     return Scanner.SOULBOUND
 end
 

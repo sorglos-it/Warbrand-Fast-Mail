@@ -29,7 +29,9 @@ function ns.VersionCheck()
     local cMaj, cMin, cPat = Util.SplitInterface(iface)
 
     local clientText = string.format("%d.%d.%d", cMaj, cMin, cPat)
-    if not bMaj then return true, false, "?", clientText, iface end
+    -- The add-on version tracks Retail only; Classic flavours run other numbers.
+    local retail = not WOW_PROJECT_MAINLINE or WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+    if not bMaj or not retail then return true, false, "?", clientText, iface end
 
     local builtText = string.format("%d.%d.%d", bMaj, bMin, bPat)
     local exact  = (bMaj == cMaj and bMin == cMin and bPat == cPat)
