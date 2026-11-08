@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 12.1.5.3 – 2026-11-08
+
+- Added: `## Interface:` declares every WoW version, including WoW Forever (16001).
+- Added: recipients with first and last name (WoW Forever, e.g. "Shadowberry Kuschelweich"), no realm needed.
 ## 12.1.5.2 – 2026-11-07
 
 - Added: runs on Classic (Era/Anniversary, TBC, Wrath, Cata, MoP) besides Retail. Without the warband only non-soulbound items are mailed by the rules.

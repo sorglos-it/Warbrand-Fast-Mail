@@ -202,9 +202,13 @@ function Util.NormalizeRecipient(input)
     local charPart, realmPart = name:match("^([^%-]+)%-(.+)$")
     if not charPart then charPart, realmPart = name, nil end
 
-    if not charPart:match(CHAR_PATTERN) then return nil, "charname" end
+    -- WoW Forever names have a first and last name ("Shadowberry Kuschelweich"): words joined by one space
+    charPart = Util.Trim(charPart):gsub("%s+", " ")
+    for word in charPart:gmatch("[^ ]+") do
+        if not word:match(CHAR_PATTERN) then return nil, "charname" end
+    end
     local charLen = ULen(charPart)
-    if charLen < 2 or charLen > 24 then return nil, "charlen" end
+    if charLen < 2 or charLen > (charPart:find(" ", 1, true) and 48 or 24) then return nil, "charlen" end
 
     if realmPart then
         realmPart = realmPart:gsub("%s+", "")
